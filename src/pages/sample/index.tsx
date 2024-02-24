@@ -12,10 +12,6 @@ const Sample = () => {
   const [selectedType, setSelectedType] = useState(DATA_SAMPLE[0]);
   const [selectedSub, setSelectedSub] = useState(SUBSCRIPTIONS[0]);
 
-  const handleTabClick = (data) => {
-    setSelectedType(data);
-  };
-
   return (
     <div>
       <Header />
@@ -64,14 +60,15 @@ const Sample = () => {
         <div className="mt-20 flex gap-8">
           <div>
             <div className="flex justify-around px-4 max-w-3xl">
-              {DATA_SAMPLE.map((item) => {
+              {DATA_SAMPLE.map((item, index) => {
                 return (
                   <p
+                    key={index}
                     className={clsx(
                       "py-3 bg-white  px-12 cursor-pointer border-t border-x rounder-t rounded-t-xl",
                       selectedType.type === item.type ? "-mb-0.5" : ""
                     )}
-                    onClick={() => handleTabClick(item)}
+                    onClick={() => setSelectedType(item)}
                   >
                     {item.type}
                   </p>
@@ -82,9 +79,9 @@ const Sample = () => {
               <p className="text-3xl">{selectedType.heading}</p>
               <br />
               <p>
-                {selectedType.content.map((item) => {
+                {selectedType.content.map((item, index) => {
                   return (
-                    <div>
+                    <div key={index}>
                       <p>{item}</p>
                       <br />
                     </div>
