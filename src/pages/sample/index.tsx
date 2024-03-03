@@ -15,40 +15,48 @@ const Sample = () => {
   return (
     <div>
       <Header />
-      <div className="mt-16 px-16 max-w-7xl mx-auto">
-        <div className="flex justify-between py-8 items-center">
-          <h2 className="text-6xl font-semibold">Data Sample</h2>
-          <div className="flex px-6 py-2 border rounded-xl border-blue-400 items-center">
+      <div className="mt-16 md:px-16 px-4 max-w-7xl mx-auto">
+        <div className="flex justify-between w-full py-8 items-center">
+          <h2 className="text-5xl md:text-6xl md:font-semibold">Data Sample</h2>
+          <div className="flex px-2 md:px-6 py-2 border-2 md:border rounded-xl border-blue-400 items-center">
             <Image
               src={ShoppingCartIcon}
               alt="shopping-car-icon"
               width={40}
               height={40}
             />
-            <button>Go to Shopping Cart(0)</button>
+            <button className="md:block hidden">Go to Shopping Cart(0)</button>
           </div>
         </div>
-        <div className="flex gap-16 my-8 items-center">
-          <div className="max-w-lg flex flex-col gap-2">
+        <div className="flex gap-16 my-2 md:my-8 items-center">
+          <div className="md:max-w-lg w-full flex flex-col md:gap-2 gap-8">
             <p>Last Updated: February 15, 2024</p>
-            <div className="flex items-center  gap-8">
-              <p className="text-4xl font-semibold">
+            <div className="flex items-center gap-8">
+              <p className="text-4xl md:text-5xl md:font-semibold">
                 Electronics Product Sales Dataset
               </p>
               <p className="border py-1 px-4 rounded-full font-semibold text-2xl">
                 $99,99
               </p>
             </div>
+            <div>
+              <Image
+                src={SampleImage}
+                alt="Sample-Image"
+                width={800}
+                height={200}
+              />
+            </div>
             <p className="py-4">
               This dataset contains information about sales of electronics
               products over the past year, including details such as product
               type, quantity sold, unit price, and location of sale.
             </p>
-            <button className="px-12 py-4 bg-blue-500 max-w-max rounded-full text-lg text-white">
+            <button className="px-12 py-4 bg-blue-500 md:max-w-max rounded-full text-lg text-white">
               Download Data Sample
             </button>
           </div>
-          <div>
+          <div className="hidden md:flex">
             <Image
               src={SampleImage}
               alt="Sample-Image"
@@ -57,7 +65,7 @@ const Sample = () => {
             />
           </div>
         </div>
-        <div className="mt-20 flex gap-8">
+        <div className="mt-20 flex-col md:flex-row gap-8">
           <div>
             <div className="flex justify-around px-4 max-w-3xl">
               {DATA_SAMPLE.map((item, index) => {
@@ -65,7 +73,7 @@ const Sample = () => {
                   <p
                     key={index}
                     className={clsx(
-                      "py-3 bg-white  px-12 cursor-pointer border-t border-x rounder-t rounded-t-xl",
+                      "md:py-3 bg-white px-2 text-center max-w-[120px] py-2 md:px-12 cursor-pointer border-t border-x rounder-t rounded-t-xl",
                       selectedType.type === item.type ? "-mb-0.5" : ""
                     )}
                     onClick={() => setSelectedType(item)}
@@ -75,10 +83,10 @@ const Sample = () => {
                 );
               })}
             </div>
-            <div className="max-w-3xl rounded-xl p-16 bg-white border">
+            <div className="max-w-3xl rounded-xl p-6 md:p-16 bg-white border">
               <p className="text-3xl">{selectedType.heading}</p>
               <br />
-              <p>
+              <div>
                 {selectedType.content.map((item, index) => {
                   return (
                     <div key={index}>
@@ -87,11 +95,11 @@ const Sample = () => {
                     </div>
                   );
                 })}
-              </p>
+              </div>
             </div>
           </div>
-          <div className="border bg-white text-center rounded-xl max-w-[400px] p-6">
-            <p className="text-3xl py-8">How to acquire it</p>
+          <div className="border bg-white text-center mt-12 md:mt-0 rounded-xl max-w-[400px] p-6">
+            <p className="text-3xl py-6 md:py-8">How to acquire it</p>
             <div className="flex flex-col gap-8">
               {SUBSCRIPTIONS.map((item, index) => {
                 return (
