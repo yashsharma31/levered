@@ -38,7 +38,7 @@ const Carousel: React.FC<CarouselProps> = ({ children }) => {
         {children.map((child, index) => (
           <div
             key={index}
-            className="flex-none w-full"
+            className="carousel-item flex-none w-full"
             style={{ width: `calc(100% / ${itemsPerPage})` }}
           >
             {child}
