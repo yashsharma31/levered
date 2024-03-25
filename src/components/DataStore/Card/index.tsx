@@ -1,28 +1,39 @@
 import Image from "next/image";
 
 import CardPlaceholder from "../../../assets/images/card-image.png";
+import { formatDate } from "@components/utils/helper";
+import RightArrowIcon from "@components/assets/icons/rightArrowIcon";
+import { Dataset } from "@components/types/dataset";
+import { useRouter } from "next/router";
 
-export const Card = () => {
+export const Card = ({ cardData }: { cardData: Dataset }) => {
+  console.log(cardData, "cardData");
+  const router = useRouter();
+  const updateAt = formatDate(cardData.updated_at);
+
   return (
     <div className="max-w-[370px] border  rounded-2xl py-6 px-4">
       <Image src={CardPlaceholder} alt="card-image" width={400} height={200} />
       <div className="flex flex-col gap-4 px-4 mt-8">
         <div>
           <div className="flex items-center justify-between w-full">
-            <p className="text-2xl font-semibold">Industry</p>
-            <p className="border py-1 px-4 rounded-full">$99,99</p>
+            <p className="text-2xl font-semibold">{cardData.title}</p>
+            <p className="border py-1 px-4 rounded-full">${cardData.price}</p>
           </div>
-          <p className="text-gray-400">Last Updated: February 15, 2024</p>
+          <p className="text-gray-400">Last Updated: {updateAt}</p>
         </div>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipiscing elit.Lorem ipsum
-          dolor sit amet consectetur adipiscing elit.Lorem ipsum dolor.
-        </p>
+        <p>{cardData.short_description}</p>
         <div className="flex flex-col mt-8 gap-4">
-          <button className="px-8 py-4 bg-blue-500 rounded-full text-lg text-white">
+          <button className="px-8 py-4 bg-blue-500 hover:shadow-md rounded-full text-lg text-white">
             Buy Now
           </button>
-          <button className="px-4 text-lg">See More {">>"}</button>
+          <div
+            onClick={() => router.push(router.asPath + "/" + cardData.id)}
+            className="px-4 text-[#9C9AA5] cursor-pointer flex justify-center text-lg"
+          >
+            <p>See More</p>
+            <RightArrowIcon width={24} stroke="#9C9AA5" />
+          </div>
         </div>
       </div>
     </div>

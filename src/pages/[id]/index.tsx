@@ -1,25 +1,44 @@
-import Image from "next/image";
 import { useState } from "react";
 import clsx from "clsx";
-
-import { Header } from "@components/components/DataStore/Header";
-import ShoppingCartIcon from "../../assets/images/shopping-cart.png";
-import SampleImage from "../../assets/images/data-sample.png";
-import { DATA_SAMPLE, SUBSCRIPTIONS } from "@components/utils/constants";
-import { Footer } from "@components/components/DataStore/Footer";
-import { formatDate } from "@components/utils/helper";
-import { fetchDatasets } from "@components/services/datasets";
-import { Dataset } from "@components/types/dataset";
+import Image from "next/image";
 import { GetServerSideProps } from "next";
 
+import { DateStoreType } from "@components/types/dataStore";
+import SampleImage from "../../assets/images/data-sample.png";
+import { fetchDataStore } from "@components/services/dataStore";
+import { Header } from "@components/components/DataStore/Header";
+import { Footer } from "@components/components/DataStore/Footer";
+import ShoppingCartIcon from "../../assets/images/shopping-cart.png";
+import { SUBSCRIPTIONS } from "@components/utils/constants";
+import { formatDate, objectToFormattedString } from "@components/utils/helper";
+
 interface DataPageProps {
-  data: Dataset[];
+  data: DateStoreType | null;
   error: string | null;
 }
 
 const Sample = ({ data, error }: DataPageProps) => {
-  const [selectedType, setSelectedType] = useState(DATA_SAMPLE[0]);
+  const DataSample = [
+    {
+      type: "Overview",
+      heading: "Dataset Overview",
+      content: [data?.subtitle, data?.full_description],
+    },
+    {
+      type: "Data Preview",
+      heading: "Data Preview",
+      content: [data?.preview_url],
+    },
+    {
+      type: "List of Data Attributes",
+      heading: "List of Data Attributes",
+      content: [objectToFormattedString(data?.data_attributes as object)],
+    },
+  ];
+  const [selectedType, setSelectedType] = useState(DataSample[0]);
   const [selectedSub, setSelectedSub] = useState(SUBSCRIPTIONS[0]);
+  const updated_at = formatDate(data?.dataset_updated_at as Date);
+
   console.log(data, error, "data");
 
   return (
@@ -40,13 +59,13 @@ const Sample = ({ data, error }: DataPageProps) => {
         </div>
         <div className="flex gap-16 my-2 md:my-8 items-center">
           <div className="md:max-w-lg w-full flex flex-col md:gap-2 gap-8">
-            <p>Last Updated: February 15, 2024</p>
+            <p>Last Updated: {updated_at}</p>
             <div className="flex items-center gap-8">
               <p className="text-4xl md:text-5xl md:font-semibold">
-                Electronics Product Sales Dataset
+                {data?.title}
               </p>
               <p className="border py-1 px-4 rounded-full font-semibold text-2xl">
-                $99,99
+                ${data?.price}
               </p>
             </div>
             <div className="flex md:hidden">
@@ -57,11 +76,7 @@ const Sample = ({ data, error }: DataPageProps) => {
                 height={200}
               />
             </div>
-            <p className="py-4">
-              This dataset contains information about sales of electronics
-              products over the past year, including details such as product
-              type, quantity sold, unit price, and location of sale.
-            </p>
+            <p className="py-4">{data?.short_description}</p>
             <button className="px-12 py-4 bg-blue-500 md:max-w-max rounded-full text-lg text-white">
               Download Data Sample
             </button>
@@ -76,9 +91,9 @@ const Sample = ({ data, error }: DataPageProps) => {
           </div>
         </div>
         <div className="mt-20 flex flex-col md:flex-row gap-8">
-          <div>
+          <div className="w-full">
             <div className="flex justify-around px-4 max-w-3xl">
-              {DATA_SAMPLE.map((item, index) => {
+              {DataSample.map((item, index) => {
                 return (
                   <p
                     key={index}
@@ -93,17 +108,28 @@ const Sample = ({ data, error }: DataPageProps) => {
                 );
               })}
             </div>
-            <div className="max-w-3xl rounded-xl p-6 md:p-16 bg-white border">
+            <div className="max-w-3xl w-full rounded-xl p-6 md:p-16 bg-white border">
               <p className="text-3xl">{selectedType.heading}</p>
               <br />
               <div>
                 {selectedType.content.map((item, index) => {
-                  return (
-                    <div key={index}>
-                      <p>{item}</p>
-                      <br />
-                    </div>
-                  );
+                  if (item) {
+                    if (selectedType.type === "List of Data Attributes") {
+                      return (
+                        <div key={index}>
+                          <pre>{item}</pre>
+                          <br />
+                        </div>
+                      );
+                    } else {
+                      return (
+                        <div key={index}>
+                          <p>{item}</p>
+                          <br />
+                        </div>
+                      );
+                    }
+                  }
                 })}
               </div>
             </div>
@@ -155,13 +181,12 @@ export const getServerSideProps: GetServerSideProps<DataPageProps> = async (
   context
 ) => {
   const { query } = context;
-  const vendor = Number(query.vendor);
-  const categories = Number(query.categories);
-  const { data, error } = await fetchDatasets(categories, vendor);
+  const id = query.id;
+  const { data, error } = await fetchDataStore(id as string);
 
   return {
     props: {
-      data: data || [],
+      data: data || null,
       error: error || null,
     },
   };

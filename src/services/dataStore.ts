@@ -1,14 +1,13 @@
-import { DatasetsResponseType } from "@components/types/dataset";
+import { DateStoreResponseType } from "@components/types/dataStore";
 
-export const fetchDatasets = async (
-  categories?: number,
-  vendorId?: number
-): Promise<DatasetsResponseType> => {
+export const fetchDataStore = async (
+  dataStore?: string
+): Promise<DateStoreResponseType> => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   if (!baseUrl) {
     return {
-      data: [],
+      data: null,
       error: "API base URL is not defined in environment variables.",
     };
   }
@@ -17,17 +16,9 @@ export const fetchDatasets = async (
   let queryString = "?";
 
   // Handling categories as either an array or a single value
-  if (categories) {
-    queryString += `categories=${categories}&`;
+  if (dataStore) {
+    queryString = dataStore;
   }
-
-  // Adding vendorId to the query string if it's provided
-  if (vendorId) queryString += `vendor=${vendorId}&`;
-
-  // Removing the trailing "&" if it exists
-  queryString = queryString.endsWith("&")
-    ? queryString.slice(0, -1)
-    : queryString;
 
   try {
     const response = await fetch(`${baseUrl}/api/datasets/${queryString}`, {
@@ -39,7 +30,7 @@ export const fetchDatasets = async (
 
     if (!response.ok) {
       return {
-        data: [],
+        data: null,
         error: "Failed to fetch datasets: " + response.statusText,
       };
     }
@@ -50,9 +41,9 @@ export const fetchDatasets = async (
     console.error("Error fetching datasets:", error);
 
     if (error instanceof Error) {
-      return { data: [], error: error.message };
+      return { data: null, error: error.message };
     }
 
-    return { data: [], error: "An unexpected error occurred" };
+    return { data: null, error: "An unexpected error occurred" };
   }
 };

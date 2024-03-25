@@ -7,6 +7,6 @@ export interface VendorsType {
 }
 
 export interface VendorsResponseType {
-  data: VendorsType[];
+  vendorData: VendorsType[];
   error?: string | null;
 }

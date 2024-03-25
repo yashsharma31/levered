@@ -5,7 +5,7 @@ export const fetchVendors = async (): Promise<VendorsResponseType> => {
 
   if (!baseUrl) {
     return {
-      data: [],
+      vendorData: [],
       error: "API base URL is not defined in environment variables.",
     };
   }
@@ -19,18 +19,18 @@ export const fetchVendors = async (): Promise<VendorsResponseType> => {
     });
     if (!response.ok) {
       return {
-        data: [],
+        vendorData: [],
         error: "Failed to fetch vendors: " + response.statusText,
       };
     }
     const data = await response.json();
 
-    return { data, error: null };
+    return { vendorData: data, error: null };
   } catch (error) {
     if (error instanceof Error) {
-      return { data: [], error: error.message };
+      return { vendorData: [], error: error.message };
     }
 
-    return { data: [], error: "An unexpected error occurred" };
+    return { vendorData: [], error: "An unexpected error occurred" };
   }
 };
