@@ -7,9 +7,10 @@ import { Dataset } from "@components/types/dataset";
 import { useRouter } from "next/router";
 
 export const Card = ({ cardData }: { cardData: Dataset }) => {
-  console.log(cardData, "cardData");
+  // console.log(cardData, "cardData");
   const router = useRouter();
   const updateAt = formatDate(cardData.updated_at);
+  console.log(router);
 
   return (
     <div className="max-w-[370px] border  rounded-2xl py-6 px-4">
@@ -28,7 +29,7 @@ export const Card = ({ cardData }: { cardData: Dataset }) => {
             Buy Now
           </button>
           <div
-            onClick={() => router.push(router.asPath + "/" + cardData.id)}
+            onClick={() => router.push(String(cardData.id))}
             className="px-4 text-[#9C9AA5] cursor-pointer flex justify-center text-lg"
           >
             <p>See More</p>

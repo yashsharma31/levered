@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import Image from "next/image";
 import { GetServerSideProps } from "next";
@@ -11,13 +11,23 @@ import { Footer } from "@components/components/DataStore/Footer";
 import ShoppingCartIcon from "../../assets/images/shopping-cart.png";
 import { SUBSCRIPTIONS } from "@components/utils/constants";
 import { formatDate, objectToFormattedString } from "@components/utils/helper";
+import { fetchDatasetPreview } from "@components/services/datasetsSample";
+import DatasetSample from "@components/components/DatasetSample";
+import { Dataset } from "@components/types/datasetSample";
 
 interface DataPageProps {
   data: DateStoreType | null;
   error: string | null;
+  datasetSample: Dataset | null;
+  sampleFetchingError: string | null;
 }
 
-const Sample = ({ data, error }: DataPageProps) => {
+const Sample = ({
+  data,
+  error,
+  datasetSample,
+  sampleFetchingError,
+}: DataPageProps) => {
   const DataSample = [
     {
       type: "Overview",
@@ -27,7 +37,7 @@ const Sample = ({ data, error }: DataPageProps) => {
     {
       type: "Data Preview",
       heading: "Data Preview",
-      content: [data?.preview_url],
+      content: [],
     },
     {
       type: "List of Data Attributes",
@@ -38,8 +48,6 @@ const Sample = ({ data, error }: DataPageProps) => {
   const [selectedType, setSelectedType] = useState(DataSample[0]);
   const [selectedSub, setSelectedSub] = useState(SUBSCRIPTIONS[0]);
   const updated_at = formatDate(data?.dataset_updated_at as Date);
-
-  console.log(data, error, "data");
 
   return (
     <div>
@@ -108,29 +116,31 @@ const Sample = ({ data, error }: DataPageProps) => {
                 );
               })}
             </div>
-            <div className="max-w-3xl w-full rounded-xl p-6 md:p-16 bg-white border">
+            <div className="w-full rounded-xl p-6 md:p-12 bg-white border">
               <p className="text-3xl">{selectedType.heading}</p>
               <br />
-              <div>
-                {selectedType.content.map((item, index) => {
-                  if (item) {
-                    if (selectedType.type === "List of Data Attributes") {
-                      return (
-                        <div key={index}>
-                          <pre>{item}</pre>
-                          <br />
-                        </div>
-                      );
-                    } else {
-                      return (
-                        <div key={index}>
-                          <p>{item}</p>
-                          <br />
-                        </div>
-                      );
-                    }
-                  }
-                })}
+              <div className="max-w-[620px] mx-auto">
+                {selectedType.type === "Data Preview" && (
+                  <DatasetSample dataset={datasetSample} />
+                )}
+                {selectedType.type === "List of Data Attributes" &&
+                  selectedType.content.map((item, index) => {
+                    return (
+                      <div key={index}>
+                        <pre>{item}</pre>
+                        <br />
+                      </div>
+                    );
+                  })}
+                {selectedType.type === "Overview" &&
+                  selectedType.content.map((item, index) => {
+                    return (
+                      <div key={index}>
+                        <p>{item}</p>
+                        <br />
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           </div>
@@ -183,11 +193,15 @@ export const getServerSideProps: GetServerSideProps<DataPageProps> = async (
   const { query } = context;
   const id = query.id;
   const { data, error } = await fetchDataStore(id as string);
+  const { data: datasetSample, error: sampleFetchingError } =
+    await fetchDatasetPreview(id as string);
 
   return {
     props: {
       data: data || null,
       error: error || null,
+      datasetSample: datasetSample || null,
+      sampleFetchingError: sampleFetchingError || null,
     },
   };
 };
