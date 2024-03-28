@@ -14,8 +14,10 @@ import { formatDate, objectToFormattedString } from "@components/utils/helper";
 import { fetchDatasetPreview } from "@components/services/datasetsSample";
 import DatasetSample from "@components/components/DatasetSample";
 import { Dataset } from "@components/types/datasetSample";
+import { fetchDatasetDownloadUrl } from "@components/services/downloaSample";
 
 interface DataPageProps {
+  id: string | null;
   data: DateStoreType | null;
   error: string | null;
   datasetSample: Dataset | null;
@@ -23,6 +25,7 @@ interface DataPageProps {
 }
 
 const Sample = ({
+  id,
   data,
   error,
   datasetSample,
@@ -48,6 +51,18 @@ const Sample = ({
   const [selectedType, setSelectedType] = useState(DataSample[0]);
   const [selectedSub, setSelectedSub] = useState(SUBSCRIPTIONS[0]);
   const updated_at = formatDate(data?.dataset_updated_at as Date);
+
+  const handleDownloadSample = async () => {
+    if (id) {
+      const downloadUrl = await fetchDatasetDownloadUrl(id);
+
+      if (downloadUrl) {
+        window.open(downloadUrl, "_blank");
+      } else {
+        console.error("Failed to retrieve download URL.");
+      }
+    }
+  };
 
   return (
     <div>
@@ -85,7 +100,10 @@ const Sample = ({
               />
             </div>
             <p className="py-4">{data?.short_description}</p>
-            <button className="px-12 py-4 bg-blue-500 md:max-w-max rounded-full text-lg text-white">
+            <button
+              onClick={handleDownloadSample}
+              className="px-12 py-4 bg-blue-500 md:max-w-max rounded-full text-lg text-white"
+            >
               Download Data Sample
             </button>
           </div>
@@ -191,13 +209,14 @@ export const getServerSideProps: GetServerSideProps<DataPageProps> = async (
   context
 ) => {
   const { query } = context;
-  const id = query.id;
+  const id = query.id as string;
   const { data, error } = await fetchDataStore(id as string);
   const { data: datasetSample, error: sampleFetchingError } =
     await fetchDatasetPreview(id as string);
 
   return {
     props: {
+      id: id || null,
       data: data || null,
       error: error || null,
       datasetSample: datasetSample || null,
