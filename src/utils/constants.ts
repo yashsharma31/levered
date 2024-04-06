@@ -1,3 +1,4 @@
+export const ACCESS_TOKEN = "levered_jwt";
 export const DATA_SAMPLE = [
   {
     type: "Overview",

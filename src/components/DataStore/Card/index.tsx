@@ -12,6 +12,10 @@ export const Card = ({ cardData }: { cardData: Dataset }) => {
   const updateAt = formatDate(cardData.updated_at);
   console.log(router);
 
+  const handleBuyNowClick = () => {
+    router.push(`/${cardData.id}/purchase`);
+  };
+
   return (
     <div className="max-w-[370px] border  rounded-2xl py-6 px-4">
       <Image src={CardPlaceholder} alt="card-image" width={400} height={200} />
@@ -25,7 +29,10 @@ export const Card = ({ cardData }: { cardData: Dataset }) => {
         </div>
         <p>{cardData.short_description}</p>
         <div className="flex flex-col mt-8 gap-4">
-          <button className="px-8 py-4 bg-blue-500 hover:shadow-md rounded-full text-lg text-white">
+          <button
+            onClick={handleBuyNowClick}
+            className="px-8 py-4 bg-blue-500 hover:shadow-md rounded-full text-lg text-white"
+          >
             Buy Now
           </button>
           <div
