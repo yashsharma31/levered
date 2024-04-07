@@ -6,7 +6,7 @@ import DownIcon from "@components/assets/icons/downIcon";
 export const Options = () => {
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="mt-40 px-8 md:px-16 flex items-center justify-between">
+      <div className="mt-16 px-8 md:px-16 flex items-center justify-between">
         <h2 className="text-5xl font-semibold">Data Store</h2>
         <div className="flex px-2 py-2 md:py-2 border-2 md:border md:px-6 rounded-2xl md:rounded-xl border-blue-400 items-center">
           <Image

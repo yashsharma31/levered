@@ -25,7 +25,9 @@ const Home: NextPage<HomeProps> = ({
 }) => {
   return (
     <div className="relative font-inter">
-      <Header />
+      <div className="bg-[#4F87F5]">
+        <Header />
+      </div>
       <Options />
       {categoriesData.map((category) => (
         <CrouselWrapper

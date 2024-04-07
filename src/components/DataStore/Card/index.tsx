@@ -22,12 +22,14 @@ export const Card = ({ cardData }: { cardData: Dataset }) => {
       <div className="flex flex-col gap-4 px-4 mt-8">
         <div>
           <div className="flex items-center justify-between w-full">
-            <p className="text-2xl font-semibold">{cardData.title}</p>
+            <p className="text-2xl font-semibold line-clamp-2">
+              {cardData.title}
+            </p>
             <p className="border py-1 px-4 rounded-full">${cardData.price}</p>
           </div>
           <p className="text-gray-400">Last Updated: {updateAt}</p>
         </div>
-        <p>{cardData.short_description}</p>
+        <p className="line-clamp-3">{cardData.short_description}</p>
         <div className="flex flex-col mt-8 gap-4">
           <button
             onClick={handleBuyNowClick}

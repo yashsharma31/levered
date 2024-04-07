@@ -15,6 +15,7 @@ import { fetchDatasetPreview } from "@components/services/datasetsSample";
 import DatasetSample from "@components/components/DatasetSample";
 import { Dataset } from "@components/types/datasetSample";
 import { fetchDatasetDownloadUrl } from "@components/services/downloaSample";
+import { useRouter } from "next/router";
 
 interface DataPageProps {
   id: string | null;
@@ -31,6 +32,7 @@ const Sample = ({
   datasetSample,
   sampleFetchingError,
 }: DataPageProps) => {
+  const router = useRouter();
   const DataSample = [
     {
       type: "Overview",
@@ -52,6 +54,10 @@ const Sample = ({
   const [selectedSub, setSelectedSub] = useState(SUBSCRIPTIONS[0]);
   const updated_at = formatDate(data?.dataset_updated_at as Date);
 
+  const handleBuyNowClick = () => {
+    router.push(`/${id}/purchase`);
+  };
+
   const handleDownloadSample = async () => {
     if (id) {
       const downloadUrl = await fetchDatasetDownloadUrl(id);
@@ -66,7 +72,9 @@ const Sample = ({
 
   return (
     <div>
-      <Header />
+      <div className="bg-[#4F87F5]">
+        <Header />
+      </div>
       <div className="mt-16 md:px-16 px-4 max-w-7xl mx-auto">
         <div className="flex justify-between w-full py-8 items-center">
           <h2 className="text-5xl md:text-6xl md:font-semibold">Data Sample</h2>
@@ -190,7 +198,10 @@ const Sample = ({
               })}
             </div>
             <div className="space-y-4 py-16">
-              <button className="px-12 py-4 bg-blue-500 w-full rounded-full text-lg text-white">
+              <button
+                onClick={handleBuyNowClick}
+                className="px-12 py-4 bg-blue-500 w-full rounded-full text-lg text-white"
+              >
                 Buy Now
               </button>
               <button className="px-12 py-4 white border-blue-500 border w-full rounded-full text-lg">
