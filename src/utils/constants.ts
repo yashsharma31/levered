@@ -33,12 +33,12 @@ export const SUBSCRIPTIONS = [
   {
     type: "One-time Purchase",
     cost: "$99,99",
-    description: "Acquire the current dataset for $49.99",
+    description: "Acquire the current dataset for $",
   },
-  {
-    type: "Subscription",
-    cost: "$99,99",
-    description:
-      "Download the current dataset and receive monthly updates sent to your email for $9.99 per month.",
-  },
+  // {
+  //   type: "Subscription",
+  //   cost: "$99,99",
+  //   description:
+  //     "Download the current dataset and receive monthly updates sent to your email for $9.99 per month.",
+  // },
 ];

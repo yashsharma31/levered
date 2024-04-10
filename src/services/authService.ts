@@ -92,7 +92,7 @@ async function handleApiResponse<T>(
   } catch (err) {
     return {
       message: "Something went wrong. Try Again.",
-      status: "NEW_ACCOUNT",
+      status: "ERROR",
     };
   }
 }

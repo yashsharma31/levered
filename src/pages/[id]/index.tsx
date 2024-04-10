@@ -78,7 +78,7 @@ const Sample = ({
       <div className="mt-16 md:px-16 px-4 max-w-7xl mx-auto">
         <div className="flex justify-between w-full py-8 items-center">
           <h2 className="text-5xl md:text-6xl md:font-semibold">Data Sample</h2>
-          <div className="flex px-2 md:px-6 py-2 border-2 md:border rounded-xl border-blue-400 items-center">
+          {/* <div className="flex px-2 md:px-6 py-2 border-2 md:border rounded-xl border-blue-400 items-center">
             <Image
               src={ShoppingCartIcon}
               alt="shopping-car-icon"
@@ -86,7 +86,7 @@ const Sample = ({
               height={40}
             />
             <button className="md:block hidden">Go to Shopping Cart(0)</button>
-          </div>
+          </div> */}
         </div>
         <div className="flex gap-16 my-2 md:my-8 items-center">
           <div className="md:max-w-lg w-full flex flex-col md:gap-2 gap-8">
@@ -124,7 +124,7 @@ const Sample = ({
             />
           </div>
         </div>
-        <div className="mt-20 flex flex-col md:flex-row gap-8">
+        <div className="mt-20 flex flex-col md:flex-row gap-2">
           <div className="w-full">
             <div className="flex justify-around px-4 max-w-3xl">
               {DataSample.map((item, index) => {
@@ -170,43 +170,49 @@ const Sample = ({
               </div>
             </div>
           </div>
-          <div className="border bg-white text-center mt-12 md:mt-0 rounded-xl max-w-[400px] p-6">
-            <p className="text-3xl py-6 md:py-8">How to acquire it</p>
-            <div className="flex flex-col gap-8">
-              {SUBSCRIPTIONS.map((item, index) => {
-                return (
-                  <div key={index}>
-                    <div
-                      className={clsx(
-                        "grid grid-cols-6 cursor-pointer rounded-2xl border-blue-500 text-xl p-8",
-                        selectedSub.type === item.type
-                          ? "border-2 shadow-lg"
-                          : "border shadow-md"
-                      )}
-                      onClick={() => setSelectedSub(item)}
-                    >
-                      <div className="h-6 w-6 rounded-full border"></div>
-                      <p className="col-span-3 text-left">{item.type}</p>
-                      <p className="text-right col-span-2">{item.cost}</p>
+          <div className="max-w-[400px] pl-6 w-full">
+            <div className="border max-h-max bg-white text-center mt-12 md:mt-0 rounded-xl p-6">
+              <p className="text-3xl py-6 md:py-8">How to acquire it</p>
+              <div className="flex flex-col gap-8">
+                {SUBSCRIPTIONS.map((item, index) => {
+                  return (
+                    <div key={index}>
+                      <div
+                        className={clsx(
+                          "grid grid-cols-6 cursor-pointer rounded-2xl border-blue-500 text-xl p-8",
+                          selectedSub.type === item.type
+                            ? "border-2 shadow-lg"
+                            : "border shadow-md"
+                        )}
+                        onClick={() => setSelectedSub(item)}
+                      >
+                        <div className="rounded-full border mt-1.5 h-5 w-5 border-blue-500 flex justify-center items-center">
+                          <div className="h-3 w-3 p-1 border-spacing-4 border-blue-500 rounded-full bg-blue-500 border"></div>
+                        </div>
+                        <p className="col-span-3 text-left">{item.type}</p>
+                        <p className="text-right col-span-2">
+                          ${data?.price.toPrecision(2)}
+                        </p>
 
-                      <p className="col-span-6 text-base pt-4">
-                        {item.description}
-                      </p>
+                        <p className="col-span-6 text-base pt-4">
+                          {item.description + data?.price.toPrecision(2)}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="space-y-4 py-16">
-              <button
-                onClick={handleBuyNowClick}
-                className="px-12 py-4 bg-blue-500 w-full rounded-full text-lg text-white"
-              >
-                Buy Now
-              </button>
-              <button className="px-12 py-4 white border-blue-500 border w-full rounded-full text-lg">
+                  );
+                })}
+              </div>
+              <div className="space-y-4 pt-16 pb-4">
+                <button
+                  onClick={handleBuyNowClick}
+                  className="px-12 py-4 bg-blue-500 w-full rounded-full text-lg text-white"
+                >
+                  Buy Now
+                </button>
+                {/* <button className="px-12 py-4 white border-blue-500 border w-full rounded-full text-lg">
                 Add to Cart
-              </button>
+              </button> */}
+              </div>
             </div>
           </div>
         </div>

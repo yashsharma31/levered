@@ -1,11 +1,17 @@
-import { ACCESS_TOKEN } from "@components/utils/constants";
-import { getCookie } from "@components/utils/tokenHelper";
 import { GetServerSideProps } from "next";
 import { setCookie } from "nookies";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { initiatePurchase } from "@components/services/purchase";
 import Cookie from "js-cookie";
+
+import { ACCESS_TOKEN } from "@components/utils/constants";
+import { getCookie } from "@components/utils/tokenHelper";
+import { initiatePurchase } from "@components/services/purchase";
+import Redirecting from "../../../assets/images/redirect.gif";
+import Image from "next/image";
+import LogoBlack from "@components/assets/icons/logoBlack";
+import StripeLogo from "@components/assets/icons/stripeLogo";
+import { Loader } from "@mantine/core";
 
 const PaymentGateway = () => {
   const router = useRouter();
@@ -32,12 +38,28 @@ const PaymentGateway = () => {
     // console.error(message);
   };
 
-  if (loading) return <div>Loading...</div>;
-
   return (
-    <div>
+    <div className="w-screen h-screen flex justify-center items-center ">
       {/* Content and additional logic for your purchase page */}
-      <p>Redirecting to payment...</p>
+      <div className="flex flex-col justify-center items-center text-center">
+        <div className="flex flex-col items-center justify-center h-80 max-h-max">
+          <LogoBlack width={200} height={800} />
+          {loading ? (
+            <Loader width={160} height={160} />
+          ) : (
+            <Image
+              src={Redirecting}
+              alt="redirecting"
+              width={100}
+              height={100}
+              quality={100}
+            />
+          )}
+          <StripeLogo width={200} height={800} />
+        </div>
+        <p className="text-xl font-semibold p-6">Redirecting to payment...</p>
+        <p>Please wait</p>
+      </div>
     </div>
   );
 };

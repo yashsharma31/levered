@@ -3,6 +3,10 @@ import { useRouter } from "next/router";
 import Cookie from "js-cookie";
 
 import { fetchDownloadUrl } from "@components/services/payment";
+import LogoBlack from "@components/assets/icons/logoBlack";
+import { Loader } from "@mantine/core";
+import Image from "next/image";
+import Success from "@components/assets/images/success-payment.gif";
 
 const PaymentSuccess = () => {
   const router = useRouter();
@@ -48,20 +52,40 @@ const PaymentSuccess = () => {
   }, [session_id, dataset_id, jwtToken, error]);
 
   return (
-    <div>
-      {downloadUrl ? (
-        <div>
-          <p>
-            Payment successful! Your download will start in {counter} seconds.
-          </p>
-          <a href={downloadUrl} target="_blank" rel="noopener noreferrer">
-            Download Dataset
-          </a>
+    <div className="w-screen h-screen">
+      <div className="flex w-full flex-col h-full items-center justify-center">
+        <div className="px-4 py-2 mb-16">
+          <LogoBlack width={150} />
         </div>
-      ) : (
-        <p>Verifying payment...</p>
-      )}
-      {error && <div>Error: {error}</div>}
+        {downloadUrl ? (
+          <div className="flex items-center justify-center flex-col gap-4">
+            <Image
+              src={Success}
+              alt="success payment"
+              width={100}
+              height={100}
+              quality={100}
+            />
+            <p className="text-lg font-semibold">
+              Payment successful! Your download will start in {counter} seconds.
+            </p>
+            <a
+              href={downloadUrl}
+              className="border px-10 py-3 bg-blue-500 text-white hover:shadow-lg rounded-lg"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Download Dataset
+            </a>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-6">
+            <Loader />
+            <p className="text-lg font-semibold">Verifying payment...</p>
+          </div>
+        )}
+        {error && <div>Error: {error}</div>}
+      </div>
     </div>
   );
 };

@@ -20,7 +20,7 @@ export const CrouselWrapper = ({
   const router = useRouter();
   return (
     <div>
-      <div className="max-w-7xl mx-auto px-8 md:px-16 mt-8">
+      <div className="max-w-7xl mx-auto px-8 md:px-16 mt-16">
         <div className="flex items-end gap-4 md:gap-8">
           <p className="text-4xl font-semibold">{heading}</p>
           <Link
