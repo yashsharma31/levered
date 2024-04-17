@@ -16,8 +16,31 @@
   }
 }
 
+body {
+  background-color: "#D9D9D9";
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+/* Default styles: Assuming 3 items per page */
+.carousel-item {
+  flex: 0 0 calc(100% / 3); /* For 3 items per page */
+}
+
+/* For tablets: 2 items per page */
+@media (max-width: 768px) {
+  .carousel-item {
+    flex: 0 0 50%; /* For 2 items per page */
+  }
+}
+
+/* For mobile: 1 item per page */
+@media (max-width: 480px) {
+  .carousel-item {
+    flex: 0 0 100%; /* For 1 item per page */
   }
 }
