@@ -43,7 +43,6 @@ async function handleApiResponse<T>(
 ): Promise<ServiceResponse> {
   try {
     const { body, status } = await promise;
-    console.log(body, status, "<><><><><");
 
     // Now using isObject to safely use the 'in' operator
     if (isObject(body)) {

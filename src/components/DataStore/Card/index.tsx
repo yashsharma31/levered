@@ -7,10 +7,8 @@ import { Dataset } from "@components/types/dataset";
 import { useRouter } from "next/router";
 
 export const Card = ({ cardData }: { cardData: Dataset }) => {
-  // console.log(cardData, "cardData");
   const router = useRouter();
   const updateAt = formatDate(cardData.updated_at);
-  console.log(router);
 
   const handleBuyNowClick = () => {
     router.push(`/${cardData.id}/purchase`);

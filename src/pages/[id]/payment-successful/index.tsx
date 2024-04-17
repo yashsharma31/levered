@@ -14,10 +14,10 @@ const PaymentSuccess = () => {
   const [downloadUrl, setDownloadUrl] = useState("");
   const [error, setError] = useState("");
   const jwtToken = Cookie.get("levered_jwt");
-  const [counter, setCounter] = useState(5); // Countdown starts from 5 seconds
+  const [counter, setCounter] = useState(5);
 
   useEffect(() => {
-    let timer: any; // Declare timer outside so it's accessible for clearInterval
+    let timer: any;
     if (session_id && dataset_id && jwtToken) {
       fetchDownloadUrl(
         dataset_id as string,

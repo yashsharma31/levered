@@ -65,7 +65,6 @@ export const AuthFormWithTabs = () => {
     try {
       if (userStatus === "initial") {
         const { status, message } = await loginUser({ email: values.email });
-        console.log("<><><><><><><>api call", status, message);
 
         if (status === "NEW_ACCOUNT") {
           setUserStatus("new");

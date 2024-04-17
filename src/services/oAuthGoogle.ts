@@ -15,7 +15,6 @@ export async function initiateOAuthGoogle(
   }
 
   try {
-    console.log("api start");
     const response = await fetch(`${baseUrl}/api/auth/oauth/google`, {
       method: "POST",
       headers: {
@@ -24,7 +23,6 @@ export async function initiateOAuthGoogle(
       },
       body: JSON.stringify({ redirectUri }),
     });
-    console.log("api end");
 
     if (!response.ok) {
       throw new Error("Failed to initiate OAuth with Google");
