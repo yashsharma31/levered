@@ -13,9 +13,6 @@ export const Header = () => {
         <Logo />
         <div className="flex items-center gap-16">
           <Link href={"/"}>Home</Link>
-          <p>Free Guide</p>
-          <Link href={"/"}>Data Store</Link>
-          <p>Blog</p>
         </div>
       </div>
       {/* {router.asPath === "/" && (

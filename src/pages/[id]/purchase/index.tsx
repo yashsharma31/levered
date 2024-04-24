@@ -12,6 +12,7 @@ import Image from "next/image";
 import LogoBlack from "@components/assets/icons/logoBlack";
 import StripeLogo from "@components/assets/icons/stripeLogo";
 import { Loader } from "@mantine/core";
+import { fetchBoughtDatasetURL } from "@components/services/downloadBoughtDataset";
 
 const PaymentGateway = () => {
   const router = useRouter();
@@ -28,6 +29,7 @@ const PaymentGateway = () => {
         jwtToken as string
       );
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, jwtToken]);
 

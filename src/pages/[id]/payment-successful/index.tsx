@@ -7,6 +7,8 @@ import LogoBlack from "@components/assets/icons/logoBlack";
 import { Loader } from "@mantine/core";
 import Image from "next/image";
 import Success from "@components/assets/images/success-payment.gif";
+import { Header } from "@components/components/DataStore/Header";
+import { Footer } from "@components/components/DataStore/Footer";
 
 const PaymentSuccess = () => {
   const router = useRouter();
@@ -14,10 +16,10 @@ const PaymentSuccess = () => {
   const [downloadUrl, setDownloadUrl] = useState("");
   const [error, setError] = useState("");
   const jwtToken = Cookie.get("levered_jwt");
-  const [counter, setCounter] = useState(5);
+  const [counter, setCounter] = useState(5); // Countdown starts from 5 seconds
 
   useEffect(() => {
-    let timer: any;
+    let timer: any; // Declare timer outside so it's accessible for clearInterval
     if (session_id && dataset_id && jwtToken) {
       fetchDownloadUrl(
         dataset_id as string,
@@ -52,8 +54,11 @@ const PaymentSuccess = () => {
   }, [session_id, dataset_id, jwtToken, error]);
 
   return (
-    <div className="w-screen h-screen">
-      <div className="flex w-full flex-col h-full items-center justify-center">
+    <div className="w-screen">
+      <div className="bg-[#4F87F5]">
+        <Header />
+      </div>
+      <div className="flex w-full flex-col mt-40 h-full items-center justify-center">
         <div className="px-4 py-2 mb-16">
           <LogoBlack width={150} />
         </div>
@@ -86,6 +91,7 @@ const PaymentSuccess = () => {
         )}
         {error && <div>Error: {error}</div>}
       </div>
+      {/* <Footer /> */}
     </div>
   );
 };

@@ -9,18 +9,25 @@ import { fetchCategories } from "@components/services/categories";
 import { CategoriesType } from "@components/types/categories";
 import { fetchDatasets } from "@components/services/datasets";
 import { Dataset } from "@components/types/dataset";
+import { fetchBoughtDatasets } from "@components/services/boughtDatasets";
+import { getCookie } from "@components/utils/tokenHelper";
+import { ACCESS_TOKEN } from "@components/utils/constants";
 
 const inter = Inter({ subsets: ["latin"] });
 
 interface HomeProps {
+  boughtDataset?: number[];
   datasetsByCategory: { [key: string]: Dataset[] };
   categoriesData: CategoriesType[];
+  jwtToken?: string;
   error: string | null;
 }
 
 const Home: NextPage<HomeProps> = ({
+  boughtDataset,
   datasetsByCategory,
   categoriesData,
+  jwtToken,
   error,
 }) => {
   return (
@@ -31,6 +38,8 @@ const Home: NextPage<HomeProps> = ({
       <Options />
       {categoriesData.map((category) => (
         <CrouselWrapper
+          jwtToken={jwtToken}
+          boughtDataset={boughtDataset}
           key={category.id}
           categoryId={category.id}
           heading={category.name}
@@ -47,7 +56,10 @@ const Home: NextPage<HomeProps> = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
+export const getServerSideProps: GetServerSideProps<HomeProps> = async (
+  context
+) => {
+  const authToken = getCookie(ACCESS_TOKEN, context.req.headers.cookie);
   let error = null;
   const datasetsByCategory: { [key: string]: Dataset[] } = {};
 
@@ -75,6 +87,19 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async () => {
     } else {
       datasetsByCategory[category.id] = dataset;
     }
+  }
+  if (authToken) {
+    const { ids: boughtDataset, error: boughtDatasetError } =
+      await fetchBoughtDatasets(authToken);
+    return {
+      props: {
+        jwtToken: authToken,
+        boughtDataset,
+        datasetsByCategory,
+        categoriesData,
+        error,
+      },
+    };
   }
 
   return {

@@ -1,8 +1,7 @@
 import { DatasetsResponseType } from "@components/types/dataset";
 
 export const fetchDatasets = async (
-  categories?: number,
-  vendorId?: number
+  categoryId?: number
 ): Promise<DatasetsResponseType> => {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -17,12 +16,11 @@ export const fetchDatasets = async (
   let queryString = "?";
 
   // Handling categories as either an array or a single value
-  if (categories) {
-    queryString += `categories=${categories}&`;
+  if (categoryId) {
+    queryString += `category_id=${categoryId}`;
   }
 
   // Adding vendorId to the query string if it's provided
-  if (vendorId) queryString += `vendor=${vendorId}&`;
 
   // Removing the trailing "&" if it exists
   queryString = queryString.endsWith("&")

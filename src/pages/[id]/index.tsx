@@ -9,16 +9,21 @@ import { fetchDataStore } from "@components/services/dataStore";
 import { Header } from "@components/components/DataStore/Header";
 import { Footer } from "@components/components/DataStore/Footer";
 import ShoppingCartIcon from "../../assets/images/shopping-cart.png";
-import { SUBSCRIPTIONS } from "@components/utils/constants";
+import { ACCESS_TOKEN, SUBSCRIPTIONS } from "@components/utils/constants";
 import { formatDate, objectToFormattedString } from "@components/utils/helper";
 import { fetchDatasetPreview } from "@components/services/datasetsSample";
 import DatasetSample from "@components/components/DatasetSample";
 import { Dataset } from "@components/types/datasetSample";
 import { fetchDatasetDownloadUrl } from "@components/services/downloaSample";
 import { useRouter } from "next/router";
+import { getCookie } from "@components/utils/tokenHelper";
+import { fetchBoughtDatasets } from "@components/services/boughtDatasets";
+import { fetchBoughtDatasetURL } from "@components/services/downloadBoughtDataset";
 
 interface DataPageProps {
   id: string | null;
+  jwtToken?: string;
+  isAlreadyBought?: boolean;
   data: DateStoreType | null;
   error: string | null;
   datasetSample: Dataset | null;
@@ -28,7 +33,9 @@ interface DataPageProps {
 const Sample = ({
   id,
   data,
+  isAlreadyBought,
   error,
+  jwtToken,
   datasetSample,
   sampleFetchingError,
 }: DataPageProps) => {
@@ -37,7 +44,7 @@ const Sample = ({
     {
       type: "Overview",
       heading: "Dataset Overview",
-      content: [data?.subtitle, data?.full_description],
+      content: [data?.subtitle || "", data?.full_description || ""],
     },
     {
       type: "Data Preview",
@@ -47,7 +54,7 @@ const Sample = ({
     {
       type: "List of Data Attributes",
       heading: "List of Data Attributes",
-      content: [objectToFormattedString(data?.data_attributes as object)],
+      content: data?.data_attributes as string[],
     },
   ];
   const [selectedType, setSelectedType] = useState(DataSample[0]);
@@ -56,6 +63,20 @@ const Sample = ({
 
   const handleBuyNowClick = () => {
     router.push(`/${id}/purchase`);
+  };
+
+  const handlePredownloadedDataset = async () => {
+    if (jwtToken && id) {
+      const downloadUrl = await fetchBoughtDatasetURL(
+        jwtToken as string,
+        id.toString()
+      );
+      if (downloadUrl) {
+        window.open(downloadUrl, "_blank");
+      } else {
+        console.error("Failed to retrieve download URL.");
+      }
+    }
   };
 
   const handleDownloadSample = async () => {
@@ -153,7 +174,7 @@ const Sample = ({
                   selectedType.content.map((item, index) => {
                     return (
                       <div key={index}>
-                        <pre>{item}</pre>
+                        <p>{item}</p>
                         <br />
                       </div>
                     );
@@ -190,12 +211,10 @@ const Sample = ({
                           <div className="h-3 w-3 p-1 border-spacing-4 border-blue-500 rounded-full bg-blue-500 border"></div>
                         </div>
                         <p className="col-span-3 text-left">{item.type}</p>
-                        <p className="text-right col-span-2">
-                          ${data?.price.toPrecision(2)}
-                        </p>
+                        <p className="text-right col-span-2">${data?.price}</p>
 
                         <p className="col-span-6 text-base pt-4">
-                          {item.description + data?.price.toPrecision(2)}
+                          {item.description + data?.price}
                         </p>
                       </div>
                     </div>
@@ -203,12 +222,21 @@ const Sample = ({
                 })}
               </div>
               <div className="space-y-4 pt-16 pb-4">
-                <button
-                  onClick={handleBuyNowClick}
-                  className="px-12 py-4 bg-blue-500 w-full rounded-full text-lg text-white"
-                >
-                  Buy Now
-                </button>
+                {isAlreadyBought ? (
+                  <button
+                    onClick={handlePredownloadedDataset}
+                    className="px-12 py-4 bg-blue-500 w-full rounded-full text-lg text-white"
+                  >
+                    Download
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleBuyNowClick}
+                    className="px-12 py-4 bg-blue-500 w-full rounded-full text-lg text-white"
+                  >
+                    Buy Now
+                  </button>
+                )}
                 {/* <button className="px-12 py-4 white border-blue-500 border w-full rounded-full text-lg">
                 Add to Cart
               </button> */}
@@ -226,10 +254,28 @@ export const getServerSideProps: GetServerSideProps<DataPageProps> = async (
   context
 ) => {
   const { query } = context;
+  const authToken = getCookie(ACCESS_TOKEN, context.req.headers.cookie);
   const id = query.id as string;
   const { data, error } = await fetchDataStore(id as string);
   const { data: datasetSample, error: sampleFetchingError } =
     await fetchDatasetPreview(id as string);
+
+  if (authToken) {
+    const { ids: boughtDataset, error: boughtDatasetError } =
+      await fetchBoughtDatasets(authToken);
+    const isAlreadyBought = boughtDataset.includes(Number(id));
+    return {
+      props: {
+        jwtToken: authToken,
+        isAlreadyBought,
+        id: id || null,
+        data: data || null,
+        error: error || null,
+        datasetSample: datasetSample || null,
+        sampleFetchingError: sampleFetchingError || null,
+      },
+    };
+  }
 
   return {
     props: {

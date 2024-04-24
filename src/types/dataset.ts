@@ -32,3 +32,8 @@ export interface DatasetsResponseType {
   data: Dataset[];
   error?: string | null;
 }
+
+export interface BoughtDatasetsResponseType {
+  ids: number[];
+  error?: string | null;
+}

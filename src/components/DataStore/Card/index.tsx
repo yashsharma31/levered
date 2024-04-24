@@ -5,13 +5,62 @@ import { formatDate } from "@components/utils/helper";
 import RightArrowIcon from "@components/assets/icons/rightArrowIcon";
 import { Dataset } from "@components/types/dataset";
 import { useRouter } from "next/router";
+import { fetchBoughtDatasetURL } from "@components/services/downloadBoughtDataset";
 
-export const Card = ({ cardData }: { cardData: Dataset }) => {
+export const Card = ({
+  cardData,
+  jwtToken,
+  boughtDataset,
+}: {
+  cardData: Dataset;
+  jwtToken?: string;
+  boughtDataset?: number[];
+}) => {
   const router = useRouter();
   const updateAt = formatDate(cardData.updated_at);
 
+  console.log("router", router);
+
+  const isAlreadyBought = boughtDataset?.includes(cardData.id);
+
+  const handlePredownloadedDataset = async () => {
+    if (jwtToken && cardData.id) {
+      const downloadUrl = await fetchBoughtDatasetURL(
+        jwtToken as string,
+        cardData.id.toString()
+      );
+      if (downloadUrl) {
+        window.open(downloadUrl, "_blank");
+      } else {
+        console.error("Failed to retrieve download URL.");
+      }
+    }
+  };
+
   const handleBuyNowClick = () => {
-    router.push(`/${cardData.id}/purchase`);
+    // Attempt to navigate using an absolute path
+    const newPath = `/${cardData.id}/purchase`;
+    if (newPath !== router.pathname) {
+      // Prevent redundant navigation
+      router.push(newPath);
+    } else {
+      // Force a full URL if needed (not typically recommended for client-side routing)
+      const fullUrl = `${window.location.protocol}//${window.location.host}/${cardData.id}/purchase`;
+      window.location.href = fullUrl;
+    }
+  };
+
+  const handleSeeMoreClick = () => {
+    // Attempt to navigate using an absolute path
+    const newPath = `/${cardData.id}`;
+    if (newPath !== router.pathname) {
+      // Prevent redundant navigation
+      router.push(newPath);
+    } else {
+      // Force a full URL if needed (not typically recommended for client-side routing)
+      const fullUrl = `${window.location.protocol}//${window.location.host}/${cardData.id}`;
+      window.location.href = fullUrl;
+    }
   };
 
   return (
@@ -29,14 +78,23 @@ export const Card = ({ cardData }: { cardData: Dataset }) => {
         </div>
         <p className="line-clamp-3">{cardData.short_description}</p>
         <div className="flex flex-col mt-8 gap-4">
-          <button
-            onClick={handleBuyNowClick}
-            className="px-8 py-4 bg-blue-500 hover:shadow-md rounded-full text-lg text-white"
-          >
-            Buy Now
-          </button>
+          {isAlreadyBought ? (
+            <button
+              onClick={handlePredownloadedDataset}
+              className="px-8 py-4 bg-blue-500 hover:shadow-md rounded-full text-lg text-white"
+            >
+              Download
+            </button>
+          ) : (
+            <button
+              onClick={handleBuyNowClick}
+              className="px-8 py-4 bg-blue-500 hover:shadow-md rounded-full text-lg text-white"
+            >
+              Buy Now
+            </button>
+          )}
           <div
-            onClick={() => router.push(String(cardData.id))}
+            onClick={handleSeeMoreClick}
             className="px-4 text-[#9C9AA5] cursor-pointer flex justify-center text-lg"
           >
             <p>See More</p>
