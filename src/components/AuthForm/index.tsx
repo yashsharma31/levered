@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useForm } from "@mantine/form";
 
 import {
+  checkUserCountry,
   loginUser,
   signUpUser,
   verifyOtp,
@@ -108,6 +109,10 @@ export const AuthFormWithTabs = () => {
 
   const handleOAuthGoogle = async () => {
     const redirectUri = `${window.location.origin}`;
+    if (!(await checkUserCountry())) {
+      setErrorMessage("Not allowed for your region");
+      return;
+    }
     initiateOAuthGoogleRoute(redirectUri + (router.query.redirect as string));
   };
 

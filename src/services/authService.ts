@@ -32,6 +32,34 @@ interface OtpVerificationRequestData {
   otp: string;
 }
 
+interface IPInfo {
+  ip: string;
+  city: string;
+  region: string;
+  country: string;
+  loc: string;
+  org: string;
+  postal: string;
+  timezone: string;
+}
+
+export async function checkUserCountry(): Promise<boolean> {
+  try {
+    const response = await fetchAPI<IPInfo | null>(
+      "https://ipinfo.io/json",
+      {}
+    );
+    console.log("IP info response:", response);
+    if (response.body && response.body.country === "US") {
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error("Failed to fetch IP info:", error);
+    return false; // Assume not US in case of failure
+  }
+}
+
 const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 // Type guard to check if a value is an object (and not null)
 function isObject(value: any): value is Record<string, any> {
@@ -95,9 +123,12 @@ async function handleApiResponse<T>(
   }
 }
 
-export function loginUser(
+export async function loginUser(
   data: LoginAuthRequestData
 ): Promise<ServiceResponse> {
+  if (!(await checkUserCountry())) {
+    return { message: "Not allowed for your region", status: "ERROR" };
+  }
   if (!baseUrl) throw new Error("API base URL is not defined.");
   return handleApiResponse(
     fetchAPI<AuthResponse | { message: string }>(
@@ -107,9 +138,12 @@ export function loginUser(
   );
 }
 
-export function signUpUser(
+export async function signUpUser(
   data: SignUpAuthRequestData
 ): Promise<ServiceResponse> {
+  if (!(await checkUserCountry())) {
+    return { message: "Not allowed for your region", status: "ERROR" };
+  }
   if (!baseUrl) throw new Error("API base URL is not defined.");
   return handleApiResponse(
     fetchAPI<AuthResponse | { message: string }>(
@@ -119,9 +153,12 @@ export function signUpUser(
   );
 }
 
-export function verifyOtp(
+export async function verifyOtp(
   data: OtpVerificationRequestData
 ): Promise<ServiceResponse> {
+  if (!(await checkUserCountry())) {
+    return { message: "Not allowed for your region", status: "ERROR" };
+  }
   if (!baseUrl) throw new Error("API base URL is not defined.");
   return handleApiResponse(
     fetchAPI<AuthResponse>(`${baseUrl}/api/auth/verify-otp`, data)
