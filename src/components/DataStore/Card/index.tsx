@@ -95,7 +95,7 @@ export const Card = ({
           )}
           <div
             onClick={handleSeeMoreClick}
-            className="px-4 text-[#9C9AA5] cursor-pointer flex justify-center text-lg"
+            className="px-4 text-gray-500 cursor-pointer flex justify-center text-lg"
           >
             <p>See More</p>
             <RightArrowIcon width={24} stroke="#9C9AA5" />
