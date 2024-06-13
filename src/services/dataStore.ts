@@ -31,7 +31,7 @@ export const fetchDataStore = async (
     if (!response.ok) {
       return {
         data: null,
-        error: "Failed to fetch datasets: " + response.statusText,
+        error: response.status,
       };
     }
 

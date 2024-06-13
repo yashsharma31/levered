@@ -50,3 +50,18 @@ export const initiateOAuthGoogleRoute = async (redirectUri: string) => {
     console.error("Failed to initiate OAuth with Google:", error);
   }
 };
+
+export const initiateOAuthLinkedinRoute = async (redirectUri: string) => {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  try {
+    // Construct the full URL for your OAuth API endpoint
+    const oauthUrl = `${baseUrl}/api/auth/oauth/linkedin?redirect_to=${encodeURIComponent(
+      redirectUri
+    )}`;
+
+    // Direct the user to the OAuth URL
+    window.location.href = oauthUrl;
+  } catch (error) {
+    console.error("Failed to initiate OAuth with Linkedin:", error);
+  }
+};

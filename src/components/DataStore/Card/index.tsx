@@ -1,25 +1,28 @@
 import Image from "next/image";
 
-import CardPlaceholder from "../../../assets/images/card-image.png";
+import LayoffImage from "../../../assets/images/layoffs.jpg";
+import MergerAcquisitionImage from "../../../assets/images/merger-acquisitions.jpg";
 import { formatDate } from "@components/utils/helper";
 import RightArrowIcon from "@components/assets/icons/rightArrowIcon";
 import { Dataset } from "@components/types/dataset";
 import { useRouter } from "next/router";
 import { fetchBoughtDatasetURL } from "@components/services/downloadBoughtDataset";
+import { Tooltip } from "@mantine/core";
+import BuyNowButton from "./BuyNowButton";
 
 export const Card = ({
+  isLoggedIn,
   cardData,
   jwtToken,
   boughtDataset,
 }: {
   cardData: Dataset;
+  isLoggedIn: boolean;
   jwtToken?: string;
   boughtDataset?: number[];
 }) => {
   const router = useRouter();
   const updateAt = formatDate(cardData.updated_at);
-
-  console.log("router", router);
 
   const isAlreadyBought = boughtDataset?.includes(cardData.id);
 
@@ -65,14 +68,28 @@ export const Card = ({
 
   return (
     <div className="max-w-[370px] border  rounded-2xl py-6 px-4">
-      <Image src={CardPlaceholder} alt="card-image" width={400} height={200} />
-      <div className="flex flex-col gap-4 px-4 mt-8">
+      <Image
+        src={
+          cardData.category.slug == "layoffs"
+            ? LayoffImage
+            : MergerAcquisitionImage
+        }
+        alt="card-image"
+        className="rounded-md"
+        width={400}
+        height={200}
+      />
+      <div className="flex flex-col gap-4 px-4 mt-2">
         <div>
           <div className="flex items-center justify-between w-full">
-            <p className="text-2xl font-semibold line-clamp-2">
-              {cardData.title}
+            <Tooltip label={cardData.title}>
+              <p className="text-2xl h-20 pr-2 py-2 font-semibold line-clamp-2">
+                {cardData.title}
+              </p>
+            </Tooltip>
+            <p className="border py-1 px-4 rounded-full">
+              ${cardData.price.toFixed(2)}
             </p>
-            <p className="border py-1 px-4 rounded-full">${cardData.price}</p>
           </div>
           <p className="text-gray-400">Last Updated: {updateAt}</p>
         </div>
@@ -86,12 +103,10 @@ export const Card = ({
               Download
             </button>
           ) : (
-            <button
-              onClick={handleBuyNowClick}
-              className="px-8 py-4 bg-blue-500 hover:shadow-md rounded-full text-lg text-white"
-            >
-              Buy Now
-            </button>
+            <BuyNowButton
+              isLoggedIn={isLoggedIn}
+              handleBuyNowClick={handleBuyNowClick}
+            />
           )}
           <div
             onClick={handleSeeMoreClick}

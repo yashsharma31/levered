@@ -15,6 +15,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 interface CategoryPageProps {
   jwtToken?: string;
+  isLoggedIn: boolean;
   boughtDataset?: number[];
   categoryData: Dataset[];
   error: string | null | undefined;
@@ -22,6 +23,7 @@ interface CategoryPageProps {
 
 const Category: NextPage<CategoryPageProps> = ({
   categoryData,
+  isLoggedIn,
   error,
   jwtToken,
   boughtDataset,
@@ -38,6 +40,7 @@ const Category: NextPage<CategoryPageProps> = ({
             {categoryData.length > 0 &&
               categoryData.map((category) => (
                 <Card
+                  isLoggedIn={isLoggedIn}
                   key={category.id}
                   cardData={category}
                   jwtToken={jwtToken}
@@ -63,6 +66,8 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
   const authToken = getCookie(ACCESS_TOKEN, context.req.headers.cookie);
   const categoryId = context.params?.category;
 
+  const isLoggedIn = !!authToken;
+
   if (!categoryId) {
     return {
       redirect: {
@@ -80,6 +85,7 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
       props: {
         jwtToken: authToken,
         boughtDataset,
+        isLoggedIn,
         categoryData,
         error: null,
       },
@@ -98,6 +104,7 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
   return {
     props: {
       categoryData,
+      isLoggedIn,
       error: null,
     },
   };

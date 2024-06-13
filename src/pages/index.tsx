@@ -12,12 +12,26 @@ import { Dataset } from "@components/types/dataset";
 import { fetchBoughtDatasets } from "@components/services/boughtDatasets";
 import { getCookie } from "@components/utils/tokenHelper";
 import { ACCESS_TOKEN } from "@components/utils/constants";
+import { fetchUserData } from "@components/services/userData";
 
 const inter = Inter({ subsets: ["latin"] });
 
 interface HomeProps {
+  isLoggedIn: boolean;
   boughtDataset?: number[];
   datasetsByCategory: { [key: string]: Dataset[] };
+  userResponse?: {
+    email: string;
+    name: string;
+    is_active: boolean;
+    company: string | null;
+    address_house_num: string | null;
+    address_street: string | null;
+    address_city: string | null;
+    address_state: string | null;
+    address_country: string | null;
+    address_zip: string | null;
+  };
   categoriesData: CategoriesType[];
   jwtToken?: string;
   error: string | null;
@@ -25,7 +39,9 @@ interface HomeProps {
 
 const Home: NextPage<HomeProps> = ({
   boughtDataset,
+  isLoggedIn,
   datasetsByCategory,
+  userResponse,
   categoriesData,
   jwtToken,
   error,
@@ -33,11 +49,12 @@ const Home: NextPage<HomeProps> = ({
   return (
     <div className="relative font-inter">
       <div className="bg-[#4F87F5]">
-        <Header />
+        <Header isLoggedIn={isLoggedIn} userData={userResponse} />
       </div>
       <Options />
       {categoriesData.map((category) => (
         <CrouselWrapper
+          isLoggedIn={isLoggedIn}
           jwtToken={jwtToken}
           boughtDataset={boughtDataset}
           key={category.id}
@@ -63,12 +80,25 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (
   let error = null;
   const datasetsByCategory: { [key: string]: Dataset[] } = {};
 
-  const { data: categoriesData, error: categoriesError } =
-    await fetchCategories();
+  const isLoggedIn = !!authToken;
+
+  const fetchCategoriesPromise = fetchCategories();
+  const fetchUserPromise = authToken
+    ? fetchUserData(authToken)
+    : Promise.resolve({ data: null, error: null });
+
+  const [categoriesResponse, userResponse] = await Promise.all([
+    fetchCategoriesPromise,
+    fetchUserPromise,
+  ]);
+  console.log(userResponse);
+  console.log(userResponse, "userResponse");
+  const { data: categoriesData, error: categoriesError } = categoriesResponse;
 
   if (categoriesError) {
     return {
       props: {
+        isLoggedIn,
         datasetsByCategory: {},
         categoriesData: [],
         error: categoriesError,
@@ -93,8 +123,10 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (
       await fetchBoughtDatasets(authToken);
     return {
       props: {
+        isLoggedIn,
         jwtToken: authToken,
         boughtDataset,
+        userResponse: userResponse.data,
         datasetsByCategory,
         categoriesData,
         error,
@@ -104,6 +136,7 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (
 
   return {
     props: {
+      isLoggedIn,
       datasetsByCategory,
       categoriesData,
       error,

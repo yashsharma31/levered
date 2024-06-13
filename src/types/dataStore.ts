@@ -30,5 +30,5 @@ export interface DateStoreType {
 
 export interface DateStoreResponseType {
   data: DateStoreType | null;
-  error?: string | null;
+  error?: string | number | null;
 }

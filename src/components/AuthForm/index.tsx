@@ -9,10 +9,14 @@ import {
   signUpUser,
   verifyOtp,
 } from "@components/services/authService";
-import { initiateOAuthGoogleRoute } from "@components/services/oAuthGoogle";
+import {
+  initiateOAuthGoogleRoute,
+  initiateOAuthLinkedinRoute,
+} from "@components/services/oAuthGoogle";
 import LogoBlack from "@components/assets/icons/logoBlack";
 import GoogleLogo from "@components/assets/icons/googleLogo";
 import { Loader } from "./Loader";
+import LinkedInLogo from "@components/assets/icons/linkeinLogo";
 
 export const AuthFormWithTabs = () => {
   const router = useRouter();
@@ -43,6 +47,13 @@ export const AuthFormWithTabs = () => {
       email: "",
       name: "",
       otp: "",
+      company: "",
+      address_house_num: "",
+      address_street: "",
+      address_city: "",
+      address_state: "",
+      address_country: "",
+      address_zip: "",
     },
     validate: {
       email: (value) => (/^\S+@\S+\.\S+$/.test(value) ? null : "Invalid email"),
@@ -94,7 +105,10 @@ export const AuthFormWithTabs = () => {
 
         if (response.status === "SUCCESS") {
           setUserStatus("successLogin");
-          router.push(router.query.redirect as string);
+          if (router.query.redirect) {
+            router.push(router.query.redirect as string);
+          }
+          router.push("/");
         } else {
           setErrorMessage(response.message);
         }
@@ -110,15 +124,24 @@ export const AuthFormWithTabs = () => {
   const handleOAuthGoogle = async () => {
     const redirectUri = `${window.location.origin}`;
     if (!(await checkUserCountry())) {
-      setErrorMessage("Not allowed for your region");
+      setErrorMessage("Stay tuned, coming in your region soon");
       return;
     }
     initiateOAuthGoogleRoute(redirectUri + (router.query.redirect as string));
   };
 
+  const handleOAuthLinkedin = async () => {
+    const redirectUri = `${window.location.origin}`;
+    if (!(await checkUserCountry())) {
+      setErrorMessage("Stay tuned, coming in your region soon");
+      return;
+    }
+    initiateOAuthLinkedinRoute(redirectUri + (router.query.redirect as string));
+  };
+
   return (
-    <div className="max-w-md mx-auto my-10">
-      <div className="py-20 mx-auto max-w-max">
+    <div className="max-w-xl mx-auto my-10">
+      <div className="py-16 mx-auto max-w-max">
         {/* Logo component */}
         <LogoBlack />
       </div>
@@ -138,19 +161,78 @@ export const AuthFormWithTabs = () => {
           type="email"
           className="w-full p-3 border rounded-md"
           required
-          placeholder="Email"
+          placeholder="Email*"
           {...form.getInputProps("email")}
           disabled={isLoading}
         />
         {userStatus === "new" && (
-          <input
-            type="text"
-            className="w-full p-3 border rounded-md"
-            required
-            placeholder="Name"
-            {...form.getInputProps("name")}
-            disabled={isLoading}
-          />
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-4">
+              <input
+                type="text"
+                className="w-full p-3 border rounded-md"
+                required
+                placeholder="Name*"
+                {...form.getInputProps("name")}
+                disabled={isLoading}
+              />
+              <input
+                type="text"
+                className="w-full p-3 border rounded-md"
+                placeholder="Company"
+                {...form.getInputProps("company")}
+                disabled={isLoading}
+              />
+            </div>
+            <div className="flex gap-4">
+              <input
+                type="text"
+                className="w-full p-3 border rounded-md"
+                placeholder="House No."
+                {...form.getInputProps("address_house_num")}
+                disabled={isLoading}
+              />
+              <input
+                type="text"
+                className="w-full p-3 border rounded-md"
+                placeholder="Street"
+                {...form.getInputProps("address_street")}
+                disabled={isLoading}
+              />
+            </div>
+            <div className="flex gap-4">
+              <input
+                type="text"
+                className="w-full p-3 border rounded-md"
+                placeholder="City"
+                {...form.getInputProps("address_city")}
+                disabled={isLoading}
+              />
+              <input
+                type="text"
+                className="w-full p-3 border rounded-md"
+                placeholder="State"
+                {...form.getInputProps("address_state")}
+                disabled={isLoading}
+              />
+            </div>
+            <div className="flex gap-4">
+              <input
+                type="text"
+                className="w-full p-3 border rounded-md"
+                placeholder="Country"
+                {...form.getInputProps("address_country")}
+                disabled={isLoading}
+              />
+              <input
+                type="text"
+                className="w-full p-3 border rounded-md"
+                placeholder="Zip Code"
+                {...form.getInputProps("address_zip")}
+                disabled={isLoading}
+              />
+            </div>
+          </div>
         )}
         {userStatus === "existing" && (
           <input
@@ -192,12 +274,21 @@ export const AuthFormWithTabs = () => {
 
         <button
           type="button"
-          className="w-full p-3 bg-black text-white rounded-md flex justify-center gap-6"
+          className="w-full p-3 bg-black hover:shadow-lg text-white rounded-md flex justify-center gap-6"
           onClick={handleOAuthGoogle}
         >
           {/* GoogleLogo component */}
           <GoogleLogo />
           <p>Sign in with Google</p>
+        </button>
+        <button
+          type="button"
+          className="w-full p-3 bg-white border-2 border-[#0077B5] hover:shadow-lg text-[#0077B5] rounded-md flex justify-center gap-6"
+          onClick={handleOAuthLinkedin}
+        >
+          {/* GoogleLogo component */}
+          <LinkedInLogo width={24} height={24} />
+          <p>Sign in with LinkedIn</p>
         </button>
       </form>
     </div>

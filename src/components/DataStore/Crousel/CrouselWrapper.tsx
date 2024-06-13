@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 interface CrouselWrapperType {
   boughtDataset?: number[];
   heading: string;
+  isLoggedIn: boolean;
   data: Dataset[];
   jwtToken?: string;
   categoryId: Number;
@@ -17,11 +18,11 @@ interface CrouselWrapperType {
 export const CrouselWrapper = ({
   heading,
   boughtDataset,
+  isLoggedIn,
   jwtToken,
   data,
   categoryId,
 }: CrouselWrapperType) => {
-  console.log("<>:>>>:>:>:>:", boughtDataset);
   const router = useRouter();
   return (
     <div>
@@ -44,6 +45,7 @@ export const CrouselWrapper = ({
             {data.map((item: Dataset, index: number) => {
               return (
                 <Card
+                  isLoggedIn={isLoggedIn}
                   key={index}
                   jwtToken={jwtToken}
                   cardData={item}

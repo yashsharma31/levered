@@ -8,6 +8,7 @@ export const fetchBoughtDatasets = async (
   if (!baseUrl) {
     return {
       ids: [],
+      data: [],
       error: "API base URL is not defined in environment variables.",
     };
   }
@@ -25,21 +26,21 @@ export const fetchBoughtDatasets = async (
     if (!response.ok) {
       return {
         ids: [],
+        data: [],
         error: "Failed to fetch datasets: " + response.statusText,
       };
     }
 
     const data = await response.json();
     const ids = data.map((dataset: any) => dataset.id);
-    return { ids, error: null };
+    return { ids, data, error: null };
   } catch (error) {
     console.error("Error fetching datasets:", error);
-    console.log("<><><>Data", error);
 
     if (error instanceof Error) {
-      return { ids: [], error: error.message };
+      return { ids: [], data: [], error: error.message };
     }
 
-    return { ids: [], error: "An unexpected error occurred" };
+    return { ids: [], data: [], error: "An unexpected error occurred" };
   }
 };

@@ -19,13 +19,14 @@ import { useRouter } from "next/router";
 import { getCookie } from "@components/utils/tokenHelper";
 import { fetchBoughtDatasets } from "@components/services/boughtDatasets";
 import { fetchBoughtDatasetURL } from "@components/services/downloadBoughtDataset";
+import BuyNowButton from "@components/components/DataStore/Card/BuyNowButton";
 
 interface DataPageProps {
   id: string | null;
   jwtToken?: string;
   isAlreadyBought?: boolean;
   data: DateStoreType | null;
-  error: string | null;
+  error: string | number | null;
   datasetSample: Dataset | null;
   sampleFetchingError: string | null;
 }
@@ -40,6 +41,7 @@ const Sample = ({
   sampleFetchingError,
 }: DataPageProps) => {
   const router = useRouter();
+  const isLoggedIn = jwtToken ? true : false;
   const DataSample = [
     {
       type: "Overview",
@@ -211,10 +213,12 @@ const Sample = ({
                           <div className="h-3 w-3 p-1 border-spacing-4 border-blue-500 rounded-full bg-blue-500 border"></div>
                         </div>
                         <p className="col-span-3 text-left">{item.type}</p>
-                        <p className="text-right col-span-2">${data?.price}</p>
+                        <p className="text-right col-span-2">
+                          ${data?.price.toFixed(2)}
+                        </p>
 
                         <p className="col-span-6 text-base pt-4">
-                          {item.description + data?.price}
+                          {item.description + data?.price.toFixed(2)}
                         </p>
                       </div>
                     </div>
@@ -230,12 +234,16 @@ const Sample = ({
                     Download
                   </button>
                 ) : (
-                  <button
-                    onClick={handleBuyNowClick}
-                    className="px-12 py-4 bg-blue-500 w-full rounded-full text-lg text-white"
-                  >
-                    Buy Now
-                  </button>
+                  <BuyNowButton
+                    isLoggedIn={isLoggedIn}
+                    handleBuyNowClick={handleBuyNowClick}
+                  />
+                  // <button
+                  //   onClick={handleBuyNowClick}
+                  //   className="px-12 py-4 bg-blue-500 w-full rounded-full text-lg text-white"
+                  // >
+                  //   Buy Now
+                  // </button>
                 )}
                 {/* <button className="px-12 py-4 white border-blue-500 border w-full rounded-full text-lg">
                 Add to Cart
@@ -259,6 +267,15 @@ export const getServerSideProps: GetServerSideProps<DataPageProps> = async (
   const { data, error } = await fetchDataStore(id as string);
   const { data: datasetSample, error: sampleFetchingError } =
     await fetchDatasetPreview(id as string);
+
+  if (error === 422) {
+    return {
+      redirect: {
+        destination: "/404",
+        permanent: false,
+      },
+    };
+  }
 
   if (authToken) {
     const { ids: boughtDataset, error: boughtDatasetError } =

@@ -1,37 +1,44 @@
 import Image from "next/image";
 
-import backgroundImage from "../../../assets/images/background.png";
-import Logo from "@components/assets/icons/logo";
-import { useRouter } from "next/router";
+import Logo from "../../../assets/images/intellizence_logo.jpg";
 import Link from "next/link";
+import NavBar from "@components/components/NavBar";
 
-export const Header = () => {
-  const router = useRouter();
+export const Header = ({
+  isLoggedIn,
+  userData,
+}: {
+  isLoggedIn?: boolean;
+  userData?: {
+    email: string;
+    name: string;
+    is_active: boolean;
+    company: string | null;
+    address_house_num: string | null;
+    address_street: string | null;
+    address_city: string | null;
+    address_state: string | null;
+    address_country: string | null;
+    address_zip: string | null;
+  };
+}) => {
   return (
     <div className="max-w-7xl mx-auto">
       <div className="flex p-8 text-white items-center justify-between">
-        <Logo />
+        <Image src={Logo} alt="logo" width={200} height={100} />
         <div className="flex items-center gap-16">
-          <Link href={"/"}>Home</Link>
+          {isLoggedIn ? (
+            <NavBar userData={userData} />
+          ) : (
+            <Link
+              href={"/login"}
+              className="px-8 py-2 bg-white text-blue-600 text-lg rounded-full"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
-      {/* {router.asPath === "/" && (
-        <>
-          <div className="text-center text-white drop-shadow-lg py-12 text-6xl leading-[80px]">
-            Build a dataset once.
-            <br />
-            Monetize it endlessly!
-          </div>
-          <div className="absolute -z-10 top-0 left-0">
-            <Image
-              src={backgroundImage}
-              alt={"landing-page-background"}
-              width={1800}
-              height={1400}
-            />
-          </div>
-        </>
-      )} */}
     </div>
   );
 };

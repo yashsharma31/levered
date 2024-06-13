@@ -49,7 +49,6 @@ export async function checkUserCountry(): Promise<boolean> {
       "https://ipinfo.io/json",
       {}
     );
-    console.log("IP info response:", response);
     if (response.body && response.body.country === "US") {
       return true;
     }
@@ -127,7 +126,10 @@ export async function loginUser(
   data: LoginAuthRequestData
 ): Promise<ServiceResponse> {
   if (!(await checkUserCountry())) {
-    return { message: "Not allowed for your region", status: "ERROR" };
+    return {
+      message: "Stay tuned, coming in your region soon",
+      status: "ERROR",
+    };
   }
   if (!baseUrl) throw new Error("API base URL is not defined.");
   return handleApiResponse(
@@ -142,7 +144,10 @@ export async function signUpUser(
   data: SignUpAuthRequestData
 ): Promise<ServiceResponse> {
   if (!(await checkUserCountry())) {
-    return { message: "Not allowed for your region", status: "ERROR" };
+    return {
+      message: "Stay tuned, coming in your region soon",
+      status: "ERROR",
+    };
   }
   if (!baseUrl) throw new Error("API base URL is not defined.");
   return handleApiResponse(
@@ -157,7 +162,10 @@ export async function verifyOtp(
   data: OtpVerificationRequestData
 ): Promise<ServiceResponse> {
   if (!(await checkUserCountry())) {
-    return { message: "Not allowed for your region", status: "ERROR" };
+    return {
+      message: "Stay tuned, coming in your region soon",
+      status: "ERROR",
+    };
   }
   if (!baseUrl) throw new Error("API base URL is not defined.");
   return handleApiResponse(
