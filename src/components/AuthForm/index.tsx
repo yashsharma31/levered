@@ -12,7 +12,7 @@ import {
 import {
   initiateOAuthGoogleRoute,
   initiateOAuthLinkedinRoute,
-} from "@components/services/oAuthGoogle";
+} from "@components/services/oAuth";
 import LogoBlack from "@components/assets/icons/logoBlack";
 import GoogleLogo from "@components/assets/icons/googleLogo";
 import { Loader } from "./Loader";
@@ -127,7 +127,11 @@ export const AuthFormWithTabs = () => {
       setErrorMessage("Stay tuned, coming in your region soon");
       return;
     }
-    initiateOAuthGoogleRoute(redirectUri + (router.query.redirect as string));
+    const redirectTo =
+      router.query.redirect === undefined
+        ? redirectUri
+        : ((redirectUri + router.query.redirect) as string);
+    initiateOAuthGoogleRoute(redirectTo);
   };
 
   const handleOAuthLinkedin = async () => {
@@ -136,12 +140,17 @@ export const AuthFormWithTabs = () => {
       setErrorMessage("Stay tuned, coming in your region soon");
       return;
     }
-    initiateOAuthLinkedinRoute(redirectUri + (router.query.redirect as string));
+    const redirectTo =
+      router.query.redirect === undefined
+        ? redirectUri
+        : ((redirectUri + router.query.redirect) as string);
+
+    initiateOAuthLinkedinRoute(redirectTo);
   };
 
   return (
-    <div className="max-w-xl mx-auto my-10">
-      <div className="py-16 mx-auto max-w-max">
+    <div className="mx-auto my-10 max-w-xl">
+      <div className="mx-auto py-16 max-w-max">
         {/* Logo component */}
         <LogoBlack />
       </div>
@@ -159,7 +168,7 @@ export const AuthFormWithTabs = () => {
       <form onSubmit={form.onSubmit(handleSubmit)} className="space-y-6 py-4">
         <input
           type="email"
-          className="w-full p-3 border rounded-md"
+          className="p-3 border rounded-md w-full"
           required
           placeholder="Email*"
           {...form.getInputProps("email")}
@@ -170,7 +179,7 @@ export const AuthFormWithTabs = () => {
             <div className="flex gap-4">
               <input
                 type="text"
-                className="w-full p-3 border rounded-md"
+                className="p-3 border rounded-md w-full"
                 required
                 placeholder="Name*"
                 {...form.getInputProps("name")}
@@ -178,7 +187,7 @@ export const AuthFormWithTabs = () => {
               />
               <input
                 type="text"
-                className="w-full p-3 border rounded-md"
+                className="p-3 border rounded-md w-full"
                 placeholder="Company"
                 {...form.getInputProps("company")}
                 disabled={isLoading}
@@ -187,14 +196,14 @@ export const AuthFormWithTabs = () => {
             <div className="flex gap-4">
               <input
                 type="text"
-                className="w-full p-3 border rounded-md"
+                className="p-3 border rounded-md w-full"
                 placeholder="House No."
                 {...form.getInputProps("address_house_num")}
                 disabled={isLoading}
               />
               <input
                 type="text"
-                className="w-full p-3 border rounded-md"
+                className="p-3 border rounded-md w-full"
                 placeholder="Street"
                 {...form.getInputProps("address_street")}
                 disabled={isLoading}
@@ -203,14 +212,14 @@ export const AuthFormWithTabs = () => {
             <div className="flex gap-4">
               <input
                 type="text"
-                className="w-full p-3 border rounded-md"
+                className="p-3 border rounded-md w-full"
                 placeholder="City"
                 {...form.getInputProps("address_city")}
                 disabled={isLoading}
               />
               <input
                 type="text"
-                className="w-full p-3 border rounded-md"
+                className="p-3 border rounded-md w-full"
                 placeholder="State"
                 {...form.getInputProps("address_state")}
                 disabled={isLoading}
@@ -219,14 +228,14 @@ export const AuthFormWithTabs = () => {
             <div className="flex gap-4">
               <input
                 type="text"
-                className="w-full p-3 border rounded-md"
+                className="p-3 border rounded-md w-full"
                 placeholder="Country"
                 {...form.getInputProps("address_country")}
                 disabled={isLoading}
               />
               <input
                 type="text"
-                className="w-full p-3 border rounded-md"
+                className="p-3 border rounded-md w-full"
                 placeholder="Zip Code"
                 {...form.getInputProps("address_zip")}
                 disabled={isLoading}
@@ -238,7 +247,7 @@ export const AuthFormWithTabs = () => {
           <input
             type="text"
             required
-            className="w-full p-3 border rounded-md"
+            className="p-3 border rounded-md w-full"
             placeholder="OTP"
             {...form.getInputProps("otp")}
             disabled={isLoading}
@@ -263,18 +272,18 @@ export const AuthFormWithTabs = () => {
           )}
         </button>
         {errorMessage && (
-          <p className="text-red-500 w-full text-center">{errorMessage}</p>
+          <p className="w-full text-center text-red-500">{errorMessage}</p>
         )}
 
-        <div className="relative flex py-5 items-center">
-          <div className="flex-grow border-t border-gray-300"></div>
+        <div className="relative flex items-center py-5">
+          <div className="flex-grow border-gray-300 border-t"></div>
           <span className="flex-shrink mx-4 text-gray-400">or</span>
-          <div className="flex-grow border-t border-gray-300"></div>
+          <div className="flex-grow border-gray-300 border-t"></div>
         </div>
 
         <button
           type="button"
-          className="w-full p-3 bg-black hover:shadow-lg text-white rounded-md flex justify-center gap-6"
+          className="flex justify-center gap-6 bg-black hover:shadow-lg p-3 rounded-md w-full text-white"
           onClick={handleOAuthGoogle}
         >
           {/* GoogleLogo component */}
@@ -283,7 +292,7 @@ export const AuthFormWithTabs = () => {
         </button>
         <button
           type="button"
-          className="w-full p-3 bg-white border-2 border-[#0077B5] hover:shadow-lg text-[#0077B5] rounded-md flex justify-center gap-6"
+          className="flex justify-center gap-6 border-[#0077B5] border-2 bg-white hover:shadow-lg p-3 rounded-md w-full text-[#0077B5]"
           onClick={handleOAuthLinkedin}
         >
           {/* GoogleLogo component */}

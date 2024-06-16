@@ -11,7 +11,12 @@ const withAuth = (WrappedComponent: React.ComponentType<AppProps>) => {
       typeof window !== "undefined" && !!Cookies.get("levered_jwt");
 
     useEffect(() => {
-      if (isAuthenticated && router.pathname === "/login") {
+      const { jwt } = router.query;
+
+      if (!isAuthenticated && jwt) {
+        Cookies.set("levered_jwt", jwt as string);
+        router.replace(router.pathname);
+      } else if (isAuthenticated && router.pathname === "/login") {
         router.replace("/");
       }
     }, [isAuthenticated, router]);

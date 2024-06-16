@@ -13,6 +13,7 @@ import { fetchBoughtDatasets } from "@components/services/boughtDatasets";
 import { getCookie } from "@components/utils/tokenHelper";
 import { ACCESS_TOKEN } from "@components/utils/constants";
 import { fetchUserData } from "@components/services/userData";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -48,6 +49,19 @@ const Home: NextPage<HomeProps> = ({
 }) => {
   return (
     <div className="relative font-inter">
+      <Head>
+        <title>Intellizence</title>
+        <meta
+          name="description"
+          content="Intellizence - Discover and purchase datasets for your business needs."
+        />
+        <meta
+          name="keywords"
+          content="Intellizence, datasets, data, business, purchase, categories"
+        />
+        <meta name="author" content="Intellizence" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
       <div className="bg-[#4F87F5]">
         <Header isLoggedIn={isLoggedIn} userData={userResponse} />
       </div>
@@ -65,7 +79,7 @@ const Home: NextPage<HomeProps> = ({
       ))}
       <Footer />
       {error && (
-        <div className="absolute top-0 left-0 right-0 bg-red-500 text-white text-center">
+        <div className="top-0 right-0 left-0 absolute bg-red-500 text-center text-white">
           Error loading data: {error}
         </div>
       )}
@@ -91,8 +105,6 @@ export const getServerSideProps: GetServerSideProps<HomeProps> = async (
     fetchCategoriesPromise,
     fetchUserPromise,
   ]);
-  console.log(userResponse);
-  console.log(userResponse, "userResponse");
   const { data: categoriesData, error: categoriesError } = categoriesResponse;
 
   if (categoriesError) {

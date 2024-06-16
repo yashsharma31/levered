@@ -10,126 +10,50 @@ const TermsAndConditions = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen justify-between">
-      <div className="max-w-5xl mx-auto max-h-[90vh] p-8 overflow-y-auto">
-        <h1 className="text-2xl font-bold mb-4 mt-10">Terms and Conditions</h1>
+    <div className="flex flex-col justify-between h-screen">
+      <div className="mx-auto p-8 max-w-5xl max-h-[90vh] overflow-y-auto">
+        <h1 className="mt-10 mb-4 font-bold text-2xl">Terms and Conditions</h1>
         <p className="mb-4">
           These terms and conditions outline the rules and regulations for the
           use of Intellizence&apos;s Website.
         </p>
+        <div className="mx-5 mb-4">
+          <ol type="1">
+            <li>
+              Non-Commercial Use: The data purchased is strictly for personal or
+              internal business use and must not be used for monetary gain or
+              resale purposes.
+            </li>
+            <li>
+              Source and Compliance: All data provided originates from publicly
+              available sources and complies with relevant data privacy laws and
+              regulations. We do not support the sale or purchase of
+              confidential or personally identifiable information.
+            </li>
+            <li>
+              Legal Compliance: You agree to use the data in accordance with
+              applicable data protection and privacy laws. It is your
+              responsibility to ensure that your use of the data does not
+              infringe upon any laws or regulations.
+            </li>
+            <li>
+              Prohibited Actions: Reselling or commercializing the purchased
+              data is strictly prohibited. Violations may result in penalties,
+              legal action, and termination of platform access.
+            </li>
+          </ol>
+        </div>
         <p className="mb-4">
-          By accessing this website we assume you accept these terms and
-          conditions. Do not continue to use Intellizence if you do not agree to
-          take all of the terms and conditions stated on this page.By accessing
-          this website we assume you accept these terms and conditions. Do not
-          continue to use Intellizence if you do not agree to take all of the
-          terms and conditions stated on this page.By accessing this website we
-          assume you accept these terms and conditions. Do not continue to use
-          Intellizence if you do not agree to take all of the terms and
-          conditions stated on this page.By accessing this website we assume you
-          accept these terms and conditions. Do not continue to use Intellizence
-          if you do not agree to take all of the terms and conditions stated on
-          this page.By accessing this website we assume you accept these terms
-          and conditions. Do not continue to use Intellizence if you do not
-          agree to take all of the terms and conditions stated on this page.By
-          accessing this website we assume you accept these terms and
-          conditions. Do not continue to use Intellizence if you do not agree to
-          take all of the terms and conditions stated on this page.By accessing
-          this website we assume you accept these terms and conditions. Do not
-          continue to use Intellizence if you do not agree to take all of the
-          terms and conditions stated on this page.By accessing this website we
-          assume you accept these terms and conditions. Do not continue to use
-          Intellizence if you do not agree to take all of the terms and
-          conditions stated on this page.By accessing this website we assume you
-          accept these terms and conditions. Do not continue to use Intellizence
-          if you do not agree to take all of the terms and conditions stated on
-          this page.By accessing this website we assume you accept these terms
-          and conditions. Do not continue to use Intellizence if you do not
-          agree to take all of the terms and conditions stated on this page.By
-          accessing this website we assume you accept these terms and
-          conditions. Do not continue to use Intellizence if you do not agree to
-          take all of the terms and conditions stated on this page.By accessing
-          this website we assume you accept these terms and conditions. Do not
-          continue to use Intellizence if you do not agree to take all of the
-          terms and conditions stated on this page.By accessing this website we
-          assume you accept these terms and conditions. Do not continue to use
-          Intellizence if you do not agree to take all of the terms and
-          conditions stated on this page.By accessing this website we assume you
-          accept these terms and conditions. Do not continue to use Intellizence
-          if you do not agree to take all of the terms and conditions stated on
-          this page.By accessing this website we assume you accept these terms
-          and conditions. Do not continue to use Intellizence if you do not
-          agree to take all of the terms and conditions stated on this page.By
-          accessing this website we assume you accept these terms and
-          conditions. Do not continue to use Intellizence if you do not agree to
-          take all of the terms and conditions stated on this page.By accessing
-          this website we assume you accept these terms and conditions. Do not
-          continue to use Intellizence if you do not agree to take all of the
-          terms and conditions stated on this page.By accessing this website we
-          assume you accept these terms and conditions. Do not continue to use
-          Intellizence if you do not agree to take all of the terms and
-          conditions stated on this page.By accessing this website we assume you
-          accept these terms and conditions. Do not continue to use Intellizence
-          if you do not agree to take all of the terms and conditions stated on
-          this page.By accessing this website we assume you accept these terms
-          and conditions. Do not continue to use Intellizence if you do not
-          agree to take all of the terms and conditions stated on this page.By
-          accessing this website we assume you accept these terms and
-          conditions. Do not continue to use Intellizence if you do not agree to
-          take all of the terms and conditions stated on this page.By accessing
-          this website we assume you accept these terms and conditions. Do not
-          continue to use Intellizence if you do not agree to take all of the
-          terms and conditions stated on this page.By accessing this website we
-          assume you accept these terms and conditions. Do not continue to use
-          Intellizence if you do not agree to take all of the terms and
-          conditions stated on this page.By accessing this website we assume you
-          accept these terms and conditions. Do not continue to use Intellizence
-          if you do not agree to take all of the terms and conditions stated on
-          this page.By accessing this website we assume you accept these terms
-          and conditions. Do not continue to use Intellizence if you do not
-          agree to take all of the terms and conditions stated on this page.By
-          accessing this website we assume you accept these terms and
-          conditions. Do not continue to use Intellizence if you do not agree to
-          take all of the terms and conditions stated on this page.By accessing
-          this website we assume you accept these terms and conditions. Do not
-          continue to use Intellizence if you do not agree to take all of the
-          terms and conditions stated on this page.By accessing this website we
-          assume you accept these terms and conditions. Do not continue to use
-          Intellizence if you do not agree to take all of the terms and
-          conditions stated on this page.By accessing this website we assume you
-          accept these terms and conditions. Do not continue to use Intellizence
-          if you do not agree to take all of the terms and conditions stated on
-          this page.By accessing this website we assume you accept these terms
-          and conditions. Do not continue to use Intellizence if you do not
-          agree to take all of the terms and conditions stated on this page.By
-          accessing this website we assume you accept these terms and
-          conditions. Do not continue to use Intellizence if you do not agree to
-          take all of the terms and conditions stated on this page.By accessing
-          this website we assume you accept these terms and conditions. Do not
-          continue to use Intellizence if you do not agree to take all of the
-          terms and conditions stated on this page.By accessing this website we
-          assume you accept these terms and conditions. Do not continue to use
-          Intellizence if you do not agree to take all of the terms and
-          conditions stated on this page.
+          By accepting these terms, you acknowledge and agree to adhere to these
+          conditions. Failure to comply may result in penalties, legal action,
+          and termination of access to our platform.
         </p>
-        <p className="mb-4">
-          The following terminology applies to these Terms and Conditions,
-          Privacy Statement and Disclaimer Notice and all Agreements:
-          &ldquo;Client&rdquo;, &ldquo;You&rdquo; and &ldquo;Your&rdquo; refers
-          to you, the person log on this website and compliant to the
-          Company&apos;s terms and conditions. &ldquo;The Company&rdquo;,
-          &ldquo;Ourselves&rdquo;, &ldquo;We&rdquo;, &ldquo;Our&rdquo; and
-          &ldquo;Us&rdquo;, refers to our Company. &ldquo;Party&rdquo;,
-          &ldquo;Parties&rdquo;, or &ldquo;Us&rdquo;, refers to both the Client
-          and ourselves.
-        </p>
-        {/* Add more dummy content as needed */}
       </div>
-      <div className="max-w-5xl py-4 w-full mx-auto px-8 flex justify-between">
+      <div className="flex justify-between mx-auto px-8 py-4 w-full max-w-5xl">
         <Image src={Logo} alt="logo" width={200} height={100} />
         <button
           onClick={handleBackClick}
-          className="bg-blue-400 max-w-max px-10 rounded text-white py-2"
+          className="bg-blue-400 px-10 py-2 rounded max-w-max text-white"
         >
           Go Back
         </button>
