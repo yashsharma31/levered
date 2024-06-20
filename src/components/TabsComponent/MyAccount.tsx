@@ -1,4 +1,7 @@
+import { updateUserAccountData } from "@components/services/updateUserData";
 import { useForm } from "@mantine/form";
+import { TextInput, Button, Notification, Loader } from "@mantine/core";
+import { useState } from "react";
 
 interface FormValues {
   name: string;
@@ -14,6 +17,7 @@ interface FormValues {
 
 function MyAccountTab({
   userData,
+  jwtToken,
 }: {
   userData?: {
     email: string;
@@ -27,8 +31,15 @@ function MyAccountTab({
     address_country: string | null;
     address_zip: string | null;
   };
+  jwtToken: string;
 }) {
-  const form = useForm({
+  const [notification, setNotification] = useState<{
+    message: string;
+    color: "red" | "green";
+  } | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const form = useForm<FormValues>({
     initialValues: {
       name: userData?.name || "",
       email: userData?.email || "",
@@ -46,148 +57,90 @@ function MyAccountTab({
     },
   });
 
-  const handleSubmit = (values: FormValues) => {
-    console.log(values);
+  const handleSubmit = async () => {
+    setLoading(true);
+    const { data, error } = await updateUserAccountData(form.values, jwtToken);
+    setLoading(false);
+
+    if (error) {
+      setNotification({
+        message: `Error updating user account: ${error}`,
+        color: "red",
+      });
+    } else {
+      setNotification({
+        message: "User account updated successfully!",
+        color: "green",
+      });
+    }
   };
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} className="space-y-8">
-      <div className="grid grid-cols-2 gap-8">
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700 px-4"
-          >
-            Name
-          </label>
-          <input
-            {...form.getInputProps("name")}
-            id="name"
-            placeholder="Enter your name"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-4 outline-none"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-700 px-4"
-          >
-            Email
-          </label>
-          <input
-            {...form.getInputProps("email")}
-            id="email"
-            placeholder="Enter your email"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-4 outline-none"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="company"
-            className="block text-sm font-medium text-gray-700 px-4"
-          >
-            Company
-          </label>
-          <input
-            {...form.getInputProps("company")}
-            id="company"
-            placeholder="Enter your company"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-4 outline-none"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="houseNumber"
-            className="block text-sm font-medium text-gray-700 px-4"
-          >
-            House Number
-          </label>
-          <input
-            {...form.getInputProps("houseNumber")}
-            id="houseNumber"
-            placeholder="Enter your house number"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-4 outline-none"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="street"
-            className="block text-sm font-medium text-gray-700 px-4"
-          >
-            Street
-          </label>
-          <input
-            {...form.getInputProps("street")}
-            id="street"
-            placeholder="Enter your street"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-4 outline-none"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="city"
-            className="block text-sm font-medium text-gray-700 px-4"
-          >
-            City
-          </label>
-          <input
-            {...form.getInputProps("city")}
-            id="city"
-            placeholder="Enter your city"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-4 outline-none"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="state"
-            className="block text-sm font-medium text-gray-700 px-4"
-          >
-            State
-          </label>
-          <input
-            {...form.getInputProps("state")}
-            id="state"
-            placeholder="Enter your state"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-4 outline-none"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="country"
-            className="block text-sm font-medium text-gray-700 px-4"
-          >
-            Country
-          </label>
-          <input
-            {...form.getInputProps("country")}
-            id="country"
-            placeholder="Enter your country"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-4 outline-none"
-          />
-        </div>
-        <div>
-          <label
-            htmlFor="zipcode"
-            className="block text-sm font-medium text-gray-700 px-4"
-          >
-            Zipcode
-          </label>
-          <input
-            {...form.getInputProps("zipcode")}
-            id="zipcode"
-            placeholder="Enter your zipcode"
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm py-2 px-4 outline-none"
-          />
-        </div>
+      <div className="gap-8 grid grid-cols-2">
+        <TextInput
+          label="Name"
+          placeholder="Enter your name"
+          {...form.getInputProps("name")}
+        />
+        <TextInput
+          label="Email"
+          placeholder="Enter your email"
+          {...form.getInputProps("email")}
+        />
+        <TextInput
+          label="Company"
+          placeholder="Enter your company"
+          {...form.getInputProps("company")}
+        />
+        <TextInput
+          label="House Number"
+          placeholder="Enter your house number"
+          {...form.getInputProps("houseNumber")}
+        />
+        <TextInput
+          label="Street"
+          placeholder="Enter your street"
+          {...form.getInputProps("street")}
+        />
+        <TextInput
+          label="City"
+          placeholder="Enter your city"
+          {...form.getInputProps("city")}
+        />
+        <TextInput
+          label="State"
+          placeholder="Enter your state"
+          {...form.getInputProps("state")}
+        />
+        <TextInput
+          label="Country"
+          placeholder="Enter your country"
+          {...form.getInputProps("country")}
+        />
+        <TextInput
+          label="Zipcode"
+          placeholder="Enter your zipcode"
+          {...form.getInputProps("zipcode")}
+        />
       </div>
-      <div className="w-full flex justify-end px-8">
-        <button
+      <div className="flex justify-end px-8 w-full">
+        <Button
           type="submit"
-          className="inline-flex justify-center py-2 px-12 border border-transparent shadow-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+          className="bg-blue-600 hover:bg-blue-700"
+          disabled={loading}
         >
-          Save
-        </button>
+          {loading ? <Loader size="sm" color="white" /> : "Save"}
+        </Button>
       </div>
+      {notification && (
+        <Notification
+          color={notification.color}
+          onClose={() => setNotification(null)}
+        >
+          {notification.message}
+        </Notification>
+      )}
     </form>
   );
 }

@@ -17,6 +17,7 @@ function classNames(...classes: string[]) {
 
 interface SettingPageProps {
   isLoggedIn: boolean;
+  jwtToken: string;
   userResponse?: {
     email: string;
     name: string;
@@ -35,6 +36,7 @@ interface SettingPageProps {
 export default function SettingsPage({
   isLoggedIn,
   userResponse,
+  jwtToken,
   purchasedDatasets,
 }: SettingPageProps) {
   const router = useRouter();
@@ -56,12 +58,12 @@ export default function SettingsPage({
       <div>
         <Header isLoggedIn={isLoggedIn} userData={userResponse} />
       </div>
-      <div className="flex max-w-7xl mx-auto mt-12">
-        <div className="w-1/4 p-4">
+      <div className="flex mx-auto mt-12 max-w-7xl">
+        <div className="p-4 w-1/4">
           <TabGroup selectedIndex={selectedTab} onChange={setSelectedTab}>
             <Button
               onClick={handleBackClick}
-              className="w-full flex justify-center py-2.5 mb-8 text-sm outline-none rounded font-medium border hover:bg-slate-200"
+              className="flex justify-center hover:bg-slate-200 mb-8 py-2.5 border rounded w-full font-medium text-sm outline-none"
             >
               <p className="px-2">Go Back</p>
             </Button>
@@ -94,8 +96,10 @@ export default function SettingsPage({
           </TabGroup>
         </div>
 
-        <div className="w-3/4 p-4 border-l">
-          {selectedTab === 0 && <MyAccountTab userData={userResponse} />}
+        <div className="p-4 border-l w-3/4">
+          {selectedTab === 0 && (
+            <MyAccountTab userData={userResponse} jwtToken={jwtToken} />
+          )}
           {selectedTab === 1 && (
             <PurchaseHistoryTab purchasedDatasets={purchasedDatasets} />
           )}
