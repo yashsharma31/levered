@@ -7,7 +7,7 @@ import RightArrowIcon from "@components/assets/icons/rightArrowIcon";
 import { Dataset } from "@components/types/dataset";
 import { useRouter } from "next/router";
 import { fetchBoughtDatasetURL } from "@components/services/downloadBoughtDataset";
-import { Tooltip } from "@mantine/core";
+// import { Tooltip } from "@mantine/core";
 import BuyNowButton from "./BuyNowButton";
 
 export const Card = ({
@@ -67,7 +67,7 @@ export const Card = ({
   };
 
   return (
-    <div className="max-w-[370px] border  rounded-2xl py-6 px-4">
+    <div className="px-4 py-6 border rounded-2xl max-w-[370px]">
       <Image
         src={
           cardData.category.slug == "layoffs"
@@ -79,26 +79,26 @@ export const Card = ({
         width={400}
         height={200}
       />
-      <div className="flex flex-col gap-4 px-4 mt-2">
+      <div className="flex flex-col gap-4 mt-2 px-4">
         <div>
-          <div className="flex items-center justify-between w-full">
-            <Tooltip label={cardData.title}>
-              <p className="text-2xl h-20 pr-2 py-2 font-semibold line-clamp-2">
-                {cardData.title}
-              </p>
-            </Tooltip>
-            <p className="border py-1 px-4 rounded-full">
+          <div className="flex flex-col justify-between mb-2 w-full">
+            {/* <Tooltip label={cardData.title}> */}
+            <p className="py-2 line-clamp-3 pr-2 h-28 font-semibold text-2xl">
+              {cardData.title}
+            </p>
+            {/* </Tooltip> */}
+            <p className="px-4 py-1 border rounded-full max-w-max">
               ${cardData.price.toFixed(2)}
             </p>
           </div>
           <p className="text-gray-400">Last Updated: {updateAt}</p>
         </div>
         <p className="line-clamp-3">{cardData.short_description}</p>
-        <div className="flex flex-col mt-8 gap-4">
+        <div className="flex flex-col gap-4 mt-8">
           {isAlreadyBought ? (
             <button
               onClick={handlePredownloadedDataset}
-              className="px-8 py-4 bg-blue-500 hover:shadow-md rounded-full text-lg text-white"
+              className="bg-blue-500 hover:shadow-md px-8 py-4 rounded-full text-lg text-white"
             >
               Download
             </button>
@@ -110,7 +110,7 @@ export const Card = ({
           )}
           <div
             onClick={handleSeeMoreClick}
-            className="px-4 text-gray-500 cursor-pointer flex justify-center text-lg"
+            className="flex justify-center px-4 text-gray-500 text-lg cursor-pointer"
           >
             <p>See More</p>
             <RightArrowIcon width={24} stroke="#9C9AA5" />

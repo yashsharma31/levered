@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import { useForm } from "@mantine/form";
+import Image from "next/image";
 
 import {
   checkUserCountry,
@@ -17,6 +18,7 @@ import LogoBlack from "@components/assets/icons/logoBlack";
 import GoogleLogo from "@components/assets/icons/googleLogo";
 import { Loader } from "./Loader";
 import LinkedInLogo from "@components/assets/icons/linkeinLogo";
+import Logo from "../../assets/images/intellizence_logo.jpg";
 
 export const AuthFormWithTabs = () => {
   const router = useRouter();
@@ -32,7 +34,7 @@ export const AuthFormWithTabs = () => {
       case "new":
         return "Welcome! Please Sign Up";
       case "existing":
-        return "Enter OTP to Log In";
+        return "Enter CODE to Login";
       case "successLogin":
         return "Login Successful! Redirecting...";
       case "successRegistration":
@@ -60,7 +62,7 @@ export const AuthFormWithTabs = () => {
       name: (value) =>
         userStatus === "new" && !value ? "Name is required" : null,
       otp: (value) =>
-        userStatus === "existing" && !value ? "OTP is required" : null,
+        userStatus === "existing" && !value ? "CODE is required" : null,
     },
   });
 
@@ -152,7 +154,14 @@ export const AuthFormWithTabs = () => {
     <div className="mx-auto my-10 max-w-xl">
       <div className="mx-auto py-16 max-w-max">
         {/* Logo component */}
-        <LogoBlack />
+        <Image
+          onClick={() => router.push("/")}
+          src={Logo}
+          alt="logo"
+          width={200}
+          height={100}
+          className="cursor-pointer"
+        />
       </div>
       <div className="flex border-b">
         <h2
@@ -248,7 +257,7 @@ export const AuthFormWithTabs = () => {
             type="text"
             required
             className="p-3 border rounded-md w-full"
-            placeholder="OTP"
+            placeholder="CODE"
             {...form.getInputProps("otp")}
             disabled={isLoading}
           />

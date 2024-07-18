@@ -3,6 +3,7 @@ import Image from "next/image";
 import Logo from "../../../assets/images/intellizence_logo.jpg";
 import Link from "next/link";
 import NavBar from "@components/components/NavBar";
+import { useRouter } from "next/router";
 
 export const Header = ({
   isLoggedIn,
@@ -22,17 +23,25 @@ export const Header = ({
     address_zip: string | null;
   };
 }) => {
+  const router = useRouter();
   return (
-    <div className="max-w-7xl mx-auto">
-      <div className="flex p-8 text-white items-center justify-between">
-        <Image src={Logo} alt="logo" width={200} height={100} />
+    <div className="mx-auto max-w-7xl">
+      <div className="flex justify-between items-center p-8 text-white">
+        <Image
+          onClick={() => router.push("/")}
+          src={Logo}
+          alt="logo"
+          width={200}
+          height={100}
+          className="cursor-pointer"
+        />
         <div className="flex items-center gap-16">
           {isLoggedIn ? (
             <NavBar userData={userData} />
           ) : (
             <Link
               href={"/login"}
-              className="px-8 py-2 bg-white text-blue-600 text-lg rounded-full"
+              className="bg-white px-8 py-2 rounded-full text-blue-600 text-lg"
             >
               Login
             </Link>

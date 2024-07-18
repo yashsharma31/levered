@@ -74,7 +74,7 @@ async function handleApiResponse<T>(
     if (isObject(body)) {
       switch (status) {
         case 200:
-          // Success: OTP sent or user logged in
+          // Success: CODE sent or user logged in
           if ("jwt" in body && typeof body.jwt === "string") {
             Cookie.set("levered_jwt", body.jwt, { expires: 7 });
             return {
@@ -83,14 +83,14 @@ async function handleApiResponse<T>(
             };
           }
           return {
-            message: body.message || "OTP sent via email",
+            message: body.message || "CODE sent via email",
             status: "OTP_SENT",
           };
 
         case 400:
-          // Incorrect OTP entered
+          // Incorrect CODE entered
           return {
-            message: body.message || "Incorrect OTP entered",
+            message: body.message || "Incorrect CODE entered",
             status: "ERROR",
           };
 
