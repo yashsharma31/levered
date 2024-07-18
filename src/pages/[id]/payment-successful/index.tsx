@@ -9,8 +9,28 @@ import Image from "next/image";
 import Success from "@components/assets/images/success-payment.gif";
 import { Header } from "@components/components/DataStore/Header";
 import { Footer } from "@components/components/DataStore/Footer";
+import { GetServerSideProps } from "next";
+import { getCookie } from "@components/utils/tokenHelper";
+import { ACCESS_TOKEN } from "@components/utils/constants";
+import { fetchUserData } from "@components/services/userData";
 
-const PaymentSuccess = () => {
+interface PaymentSuccessPageProps {
+  isLoggedIn: boolean;
+  userData?: {
+    email: string;
+    name: string;
+    is_active: boolean;
+    company: string | null;
+    address_house_num: string | null;
+    address_street: string | null;
+    address_city: string | null;
+    address_state: string | null;
+    address_country: string | null;
+    address_zip: string | null;
+  };
+}
+
+const PaymentSuccess = ({ isLoggedIn, userData }: PaymentSuccessPageProps) => {
   const router = useRouter();
   const { session_id, id: dataset_id } = router.query;
   const [downloadUrl, setDownloadUrl] = useState("");
@@ -56,14 +76,14 @@ const PaymentSuccess = () => {
   return (
     <div className="w-screen">
       <div className="bg-[#4F87F5]">
-        <Header />
+        <Header isLoggedIn={isLoggedIn} userData={userData} />
       </div>
-      <div className="flex w-full flex-col mt-40 h-full items-center justify-center">
-        <div className="px-4 py-2 mb-16">
+      <div className="flex flex-col justify-center items-center mt-40 w-full h-full">
+        <div className="mb-16 px-4 py-2">
           <LogoBlack width={150} />
         </div>
         {downloadUrl ? (
-          <div className="flex items-center justify-center flex-col gap-4">
+          <div className="flex flex-col justify-center items-center gap-4">
             <Image
               src={Success}
               alt="success payment"
@@ -71,12 +91,12 @@ const PaymentSuccess = () => {
               height={100}
               quality={100}
             />
-            <p className="text-lg font-semibold">
+            <p className="font-semibold text-lg">
               Payment successful! Your download will start in {counter} seconds.
             </p>
             <a
               href={downloadUrl}
-              className="border px-10 py-3 bg-blue-500 text-white hover:shadow-lg rounded-lg"
+              className="bg-blue-500 hover:shadow-lg px-10 py-3 border rounded-lg text-white"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -84,9 +104,9 @@ const PaymentSuccess = () => {
             </a>
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center gap-6">
+          <div className="flex flex-col justify-center items-center gap-6">
             <Loader />
-            <p className="text-lg font-semibold">Verifying payment...</p>
+            <p className="font-semibold text-lg">Verifying payment...</p>
           </div>
         )}
         {error && <div>Error: {error}</div>}
@@ -94,6 +114,33 @@ const PaymentSuccess = () => {
       {/* <Footer /> */}
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps<
+  PaymentSuccessPageProps
+> = async (context) => {
+  const authToken = getCookie(ACCESS_TOKEN, context.req.headers.cookie);
+  const isLoggedIn = !!authToken;
+
+  const fetchUserPromise = authToken
+    ? fetchUserData(authToken)
+    : Promise.resolve({ data: null, error: null });
+  let userData = null;
+  if (authToken) {
+    userData = (await fetchUserPromise).data;
+    return {
+      props: {
+        isLoggedIn,
+        userData,
+      },
+    };
+  }
+
+  return {
+    props: {
+      isLoggedIn,
+    },
+  };
 };
 
 export default PaymentSuccess;

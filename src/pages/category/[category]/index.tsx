@@ -10,6 +10,7 @@ import { Card } from "@components/components/DataStore/Card";
 import { getCookie } from "@components/utils/tokenHelper";
 import { ACCESS_TOKEN } from "@components/utils/constants";
 import { fetchBoughtDatasets } from "@components/services/boughtDatasets";
+import { fetchUserData } from "@components/services/userData";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,18 @@ interface CategoryPageProps {
   isLoggedIn: boolean;
   boughtDataset?: number[];
   categoryData: Dataset[];
+  userData?: {
+    email: string;
+    name: string;
+    is_active: boolean;
+    company: string | null;
+    address_house_num: string | null;
+    address_street: string | null;
+    address_city: string | null;
+    address_state: string | null;
+    address_country: string | null;
+    address_zip: string | null;
+  };
   error: string | null | undefined;
 }
 
@@ -26,16 +39,17 @@ const Category: NextPage<CategoryPageProps> = ({
   isLoggedIn,
   error,
   jwtToken,
+  userData,
   boughtDataset,
 }) => {
   return (
     <div className="relative font-inter">
       <div className="bg-[#4F87F5]">
-        <Header />
+        <Header userData={userData} isLoggedIn={isLoggedIn} />
       </div>
       <Options />
       <div>
-        <div className="max-w-7xl mx-auto px-8 md:px-16 mt-8">
+        <div className="mx-auto mt-8 px-8 md:px-16 max-w-7xl">
           <div className="flex flex-wrap gap-4 md:gap-4">
             {categoryData.length > 0 &&
               categoryData.map((category) => (
@@ -52,7 +66,7 @@ const Category: NextPage<CategoryPageProps> = ({
       </div>
       <Footer />
       {error && (
-        <div className="absolute top-0 left-0 right-0 bg-red-500 text-white text-center">
+        <div className="top-0 right-0 left-0 absolute bg-red-500 text-center text-white">
           Error loading data: {error}
         </div>
       )}
@@ -76,15 +90,22 @@ export const getServerSideProps: GetServerSideProps<CategoryPageProps> = async (
       },
     };
   }
+  const fetchUserPromise = authToken
+    ? fetchUserData(authToken)
+    : Promise.resolve({ data: null, error: null });
+  let userData = null;
 
   const { data: categoryData, error } = await fetchDatasets(Number(categoryId));
   if (authToken) {
     const { ids: boughtDataset, error: boughtDatasetError } =
       await fetchBoughtDatasets(authToken);
+
+    userData = (await fetchUserPromise).data;
     return {
       props: {
         jwtToken: authToken,
         boughtDataset,
+        userData,
         isLoggedIn,
         categoryData,
         error: null,

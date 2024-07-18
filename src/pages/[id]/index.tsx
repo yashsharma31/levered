@@ -20,10 +20,24 @@ import { getCookie } from "@components/utils/tokenHelper";
 import { fetchBoughtDatasets } from "@components/services/boughtDatasets";
 import { fetchBoughtDatasetURL } from "@components/services/downloadBoughtDataset";
 import BuyNowButton from "@components/components/DataStore/Card/BuyNowButton";
+import { fetchUserData } from "@components/services/userData";
 
 interface DataPageProps {
+  isLoggedIn: boolean;
   id: string | null;
   jwtToken?: string;
+  userData?: {
+    email: string;
+    name: string;
+    is_active: boolean;
+    company: string | null;
+    address_house_num: string | null;
+    address_street: string | null;
+    address_city: string | null;
+    address_state: string | null;
+    address_country: string | null;
+    address_zip: string | null;
+  };
   isAlreadyBought?: boolean;
   data: DateStoreType | null;
   error: string | number | null;
@@ -34,14 +48,15 @@ interface DataPageProps {
 const Sample = ({
   id,
   data,
+  isLoggedIn,
   isAlreadyBought,
   error,
+  userData,
   jwtToken,
   datasetSample,
   sampleFetchingError,
 }: DataPageProps) => {
   const router = useRouter();
-  const isLoggedIn = jwtToken ? true : false;
   const DataSample = [
     {
       type: "Overview",
@@ -96,12 +111,12 @@ const Sample = ({
   return (
     <div>
       <div className="bg-[#4F87F5]">
-        <Header />
+        <Header isLoggedIn={isLoggedIn} userData={userData} />
       </div>
-      <div className="mt-16 md:px-16 px-4 max-w-7xl mx-auto">
-        <div className="flex justify-between w-full py-8 items-center">
-          <h2 className="text-5xl md:text-6xl md:font-semibold">Data Sample</h2>
-          {/* <div className="flex px-2 md:px-6 py-2 border-2 md:border rounded-xl border-blue-400 items-center">
+      <div className="mx-auto mt-16 px-4 md:px-16 max-w-7xl">
+        <div className="flex justify-between items-center py-8 w-full">
+          <h2 className="md:font-semibold text-5xl md:text-6xl">Data Sample</h2>
+          {/* <div className="flex items-center border-2 px-2 md:px-6 py-2 md:border border-blue-400 rounded-xl">
             <Image
               src={ShoppingCartIcon}
               alt="shopping-car-icon"
@@ -111,14 +126,14 @@ const Sample = ({
             <button className="md:block hidden">Go to Shopping Cart(0)</button>
           </div> */}
         </div>
-        <div className="flex gap-16 my-2 md:my-8 items-center">
-          <div className="md:max-w-lg w-full flex flex-col md:gap-2 gap-8">
+        <div className="flex items-center gap-16 my-2 md:my-8">
+          <div className="flex flex-col gap-8 md:gap-2 w-full md:max-w-lg">
             <p>Last Updated: {updated_at}</p>
             <div className="flex items-center gap-8">
-              <p className="text-4xl md:text-5xl md:font-semibold">
+              <p className="md:font-semibold text-4xl md:text-5xl">
                 {data?.title}
               </p>
-              <p className="border py-1 px-4 rounded-full font-semibold text-2xl">
+              <p className="px-4 py-1 border rounded-full font-semibold text-2xl">
                 ${data?.price}
               </p>
             </div>
@@ -133,12 +148,12 @@ const Sample = ({
             <p className="py-4">{data?.short_description}</p>
             <button
               onClick={handleDownloadSample}
-              className="px-12 py-4 bg-blue-500 md:max-w-max rounded-full text-lg text-white"
+              className="bg-blue-500 px-12 py-4 rounded-full md:max-w-max text-lg text-white"
             >
               Download Data Sample
             </button>
           </div>
-          <div className="hidden md:flex">
+          <div className="md:flex hidden">
             <Image
               src={SampleImage}
               alt="Sample-Image"
@@ -147,7 +162,7 @@ const Sample = ({
             />
           </div>
         </div>
-        <div className="mt-20 flex flex-col md:flex-row gap-2">
+        <div className="flex md:flex-row flex-col gap-2 mt-20">
           <div className="w-full">
             <div className="flex justify-around px-4 max-w-3xl">
               {DataSample.map((item, index) => {
@@ -165,10 +180,10 @@ const Sample = ({
                 );
               })}
             </div>
-            <div className="w-full rounded-xl p-6 md:p-12 bg-white border">
+            <div className="bg-white p-6 md:p-12 border rounded-xl w-full">
               <p className="text-3xl">{selectedType.heading}</p>
               <br />
-              <div className="max-w-[620px] mx-auto">
+              <div className="mx-auto max-w-[620px]">
                 {selectedType.type === "Data Preview" && (
                   <DatasetSample dataset={datasetSample} />
                 )}
@@ -193,9 +208,9 @@ const Sample = ({
               </div>
             </div>
           </div>
-          <div className="max-w-[400px] pl-6 w-full">
-            <div className="border max-h-max bg-white text-center mt-12 md:mt-0 rounded-xl p-6">
-              <p className="text-3xl py-6 md:py-8">How to acquire it</p>
+          <div className="pl-6 w-full max-w-[400px]">
+            <div className="bg-white mt-12 md:mt-0 p-6 border rounded-xl max-h-max text-center">
+              <p className="py-6 md:py-8 text-3xl">How to acquire it</p>
               <div className="flex flex-col gap-8">
                 {SUBSCRIPTIONS.map((item, index) => {
                   return (
@@ -209,15 +224,15 @@ const Sample = ({
                         )}
                         onClick={() => setSelectedSub(item)}
                       >
-                        <div className="rounded-full border mt-1.5 h-5 w-5 border-blue-500 flex justify-center items-center">
-                          <div className="h-3 w-3 p-1 border-spacing-4 border-blue-500 rounded-full bg-blue-500 border"></div>
+                        <div className="flex justify-center items-center mt-1.5 border border-blue-500 rounded-full w-5 h-5">
+                          <div className="border-spacing-4 bg-blue-500 p-1 border border-blue-500 rounded-full w-3 h-3"></div>
                         </div>
                         <p className="col-span-3 text-left">{item.type}</p>
                         <p className="text-right col-span-2">
                           ${data?.price.toFixed(2)}
                         </p>
 
-                        <p className="col-span-6 text-base pt-4">
+                        <p className="col-span-6 pt-4 text-base">
                           {item.description + data?.price.toFixed(2)}
                         </p>
                       </div>
@@ -229,7 +244,7 @@ const Sample = ({
                 {isAlreadyBought ? (
                   <button
                     onClick={handlePredownloadedDataset}
-                    className="px-12 py-4 bg-blue-500 w-full rounded-full text-lg text-white"
+                    className="bg-blue-500 px-12 py-4 rounded-full w-full text-lg text-white"
                   >
                     Download
                   </button>
@@ -240,12 +255,12 @@ const Sample = ({
                   />
                   // <button
                   //   onClick={handleBuyNowClick}
-                  //   className="px-12 py-4 bg-blue-500 w-full rounded-full text-lg text-white"
+                  //   className="bg-blue-500 px-12 py-4 rounded-full w-full text-lg text-white"
                   // >
                   //   Buy Now
                   // </button>
                 )}
-                {/* <button className="px-12 py-4 white border-blue-500 border w-full rounded-full text-lg">
+                {/* <button className="px-12 py-4 border border-blue-500 rounded-full w-full text-lg white">
                 Add to Cart
               </button> */}
               </div>
@@ -263,6 +278,7 @@ export const getServerSideProps: GetServerSideProps<DataPageProps> = async (
 ) => {
   const { query } = context;
   const authToken = getCookie(ACCESS_TOKEN, context.req.headers.cookie);
+  const isLoggedIn = !!authToken;
   const id = query.id as string;
   const { data, error } = await fetchDataStore(id as string);
   const { data: datasetSample, error: sampleFetchingError } =
@@ -276,15 +292,22 @@ export const getServerSideProps: GetServerSideProps<DataPageProps> = async (
       },
     };
   }
+  const fetchUserPromise = authToken
+    ? fetchUserData(authToken)
+    : Promise.resolve({ data: null, error: null });
+  let userData = null;
 
   if (authToken) {
     const { ids: boughtDataset, error: boughtDatasetError } =
       await fetchBoughtDatasets(authToken);
+    userData = (await fetchUserPromise).data;
     const isAlreadyBought = boughtDataset.includes(Number(id));
     return {
       props: {
+        isLoggedIn,
         jwtToken: authToken,
         isAlreadyBought,
+        userData,
         id: id || null,
         data: data || null,
         error: error || null,
@@ -296,6 +319,7 @@ export const getServerSideProps: GetServerSideProps<DataPageProps> = async (
 
   return {
     props: {
+      isLoggedIn,
       id: id || null,
       data: data || null,
       error: error || null,
