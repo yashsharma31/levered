@@ -67,7 +67,12 @@ export const Card = ({
   };
 
   return (
-    <div className="px-4 py-6 border rounded-2xl max-w-[370px]">
+    <div className="px-4 pb-6 border rounded-2xl max-w-[370px]">
+      <div className="bg-white ml-auto rounded-sm max-w-max translate-y-8">
+        <p className="z-10 px-4 py-1 font-semibold">
+          ${cardData.price.toFixed(2)}
+        </p>
+      </div>
       <Image
         src={
           cardData.category.slug == "layoffs"
@@ -79,17 +84,15 @@ export const Card = ({
         width={400}
         height={200}
       />
+
       <div className="flex flex-col gap-4 mt-2 px-4">
         <div>
           <div className="flex flex-col justify-between mb-2 w-full">
             {/* <Tooltip label={cardData.title}> */}
-            <p className="py-2 line-clamp-3 pr-2 h-28 font-semibold text-2xl">
+            <p className="py-2 line-clamp-3 pr-2 h-20 font-semibold text-2xl">
               {cardData.title}
             </p>
             {/* </Tooltip> */}
-            <p className="px-4 py-1 border rounded-full max-w-max">
-              ${cardData.price.toFixed(2)}
-            </p>
           </div>
           <p className="text-gray-400">Last Updated: {updateAt}</p>
         </div>

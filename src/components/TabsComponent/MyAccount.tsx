@@ -78,7 +78,7 @@ function MyAccountTab({
   return (
     <form onSubmit={form.onSubmit(handleSubmit)} className="space-y-8">
       <div className="gap-8 grid grid-cols-2">
-        <TextInput
+        {/* <TextInput
           label="Name"
           placeholder="Enter your name"
           {...form.getInputProps("name")}
@@ -122,9 +122,9 @@ function MyAccountTab({
           label="Zipcode"
           placeholder="Enter your zipcode"
           {...form.getInputProps("zipcode")}
-        />
+        /> */}
       </div>
-      <div className="flex justify-end px-8 w-full">
+      {/* <div className="flex justify-end px-8 w-full">
         <Button
           type="submit"
           className="bg-blue-600 hover:bg-blue-700"
@@ -132,6 +132,16 @@ function MyAccountTab({
         >
           {loading ? <Loader size="sm" color="white" /> : "Save"}
         </Button>
+      </div> */}
+      <div className="flex flex-col gap-4 px-4">
+        <div>
+          <label className="text-sm">Name</label>
+          <p>{userData?.name}</p>
+        </div>
+        <div>
+          <label className="text-sm">Email</label>
+          <p>{userData?.email}</p>
+        </div>
       </div>
       {notification && (
         <Notification
